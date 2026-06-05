@@ -71,9 +71,25 @@ html_content = """
             color: #4CAF50; /* Green for loading text */
             margin-top: 10px;
         }
+        .banner {
+            background-color: #4CAF50; /* Green banner background */
+            color: #000000; /* Black text for banner */
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
+
+<div class="banner">
+    Dana Committe Taheri Mohallah
+</div>
 
 <div class="container">
     <div id="menu-section">
@@ -115,13 +131,32 @@ html_content = """
     let itemsArray = [];
     let currentPlaceholderText = ""; // To store the placeholder for the main input section
 
+    // Centralized function to show a specific section and hide others
+    function showSection(sectionId) {
+        const sections = ['menu-section', 'date-input-section', 'input-section'];
+        sections.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.add('hidden');
+            }
+        });
+        const targetElement = document.getElementById(sectionId);
+        if (targetElement) {
+            targetElement.classList.remove('hidden');
+        }
+    }
+
+    // Initial state: show only the menu
+    document.addEventListener('DOMContentLoaded', () => {
+        showSection('menu-section');
+    });
+
     function showDateInput(tabName, placeholderText) {
         currentTab = tabName;
         currentPlaceholderText = placeholderText; // Store for later
         document.getElementById("date-category-title").innerText = tabName + " Date";
 
-        document.getElementById("menu-section").classList.add("hidden");
-        document.getElementById("date-input-section").classList.remove("hidden");
+        showSection('date-input-section');
         document.getElementById("attendance-date-input").focus();
     }
 
@@ -137,8 +172,7 @@ html_content = """
             document.getElementById("column-header").innerText = "Date: " + customHeader;
             document.getElementById("main-input").placeholder = currentPlaceholderText; // Use the stored placeholder
 
-            document.getElementById("date-input-section").classList.add("hidden");
-            document.getElementById("input-section").classList.remove("hidden");
+            showSection('input-section');
             document.getElementById("main-input").focus();
         } else {
             alert("Please enter a date.");
@@ -209,8 +243,7 @@ html_content = """
 
     function goBackToMenuFromDateInput() {
         // This function handles going back from the date input section to the main menu
-        document.getElementById("date-input-section").classList.add("hidden");
-        document.getElementById("menu-section").classList.remove("hidden");
+        showSection('menu-section');
         // Clear any potentially half-filled data for safety
         currentTab = "";
         customHeader = "";
@@ -222,10 +255,9 @@ html_content = """
         document.getElementById("item-list").innerHTML = "";
         document.getElementById("count").innerText = "0";
         document.getElementById("loading").classList.add("hidden");
-        document.getElementById("input-section").classList.add("hidden");
-        document.getElementById("date-input-section").classList.add("hidden"); // Also hide date input section
-        document.getElementById("menu-section").classList.remove("hidden");
         
+        showSection('menu-section'); // Always go back to the menu
+
         // Reset any temporary variables
         currentTab = "";
         customHeader = "";
