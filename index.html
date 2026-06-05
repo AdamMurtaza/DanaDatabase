@@ -7,21 +7,24 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            padding: 20px;
+            padding: 10px; /* Reduced padding for smaller screens */
             background-color: #000000; /* Dark black background */
             color: #e0e0e0; /* Light text for contrast */
         }
         .container {
             max-width: 500px;
+            width: 95%; /* Ensure it doesn't touch edges on very small screens */
             margin: 0 auto;
             background: #222222; /* Darker grey for container */
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5); /* Stronger shadow for dark theme */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
         h2, h3 {
             text-align: center;
             color: #4CAF50; /* Green for headers */
+            word-wrap: break-word; /* Prevent long titles from overflowing */
         }
         button {
             width: 100%;
@@ -34,6 +37,7 @@
             font-weight: bold;
             transition: background 0.2s;
             color: #ffffff; /* White text on buttons */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
         .btn-menu { background-color: #4CAF50; /* Green */ margin-bottom: 12px; }
         .btn-add { background-color: #4CAF50; /* Green */ }
@@ -61,12 +65,16 @@
             margin-top: 5px;
             border-radius: 6px;
             color: #e0e0e0; /* Light text color for list items */
+            word-wrap: break-word; /* Ensure long list items don't overflow */
         }
         #loading {
             text-align: center;
             font-weight: bold;
             color: #4CAF50; /* Green for loading text */
             margin-top: 10px;
+            padding: 10px;
+            background-color: #333333;
+            border-radius: 8px;
         }
         .banner {
             background-color: #4CAF50; /* Green banner background */
@@ -78,8 +86,19 @@
             font-weight: bold;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            word-wrap: break-word; /* Ensure banner text doesn't overflow */
         }
         .hidden { display: none; }
+        button:disabled {
+            background-color: #444; /* Darker background for disabled buttons */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        input:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -91,30 +110,30 @@
 <div class="container">
     <div id="menu-section">
         <h2>Select Category</h2>
-        <button class="btn-menu" onclick="showDateInput('Attendance', 'Enter Members')">📅 Attendance</button>
+        <button class="btn-menu" id="attendance-button" onclick="showDateInput('Attendance', 'Enter Members')">📅 Attendance</button>
     </div>
 
     <div id="date-input-section" class="hidden">
         <h2 id="date-category-title">Attendance Date</h2>
         <input type="date" id="attendance-date-input" autocomplete="off">
-        <button class="btn-continue" onclick="processAttendanceDate()">Continue</button>
-        <button class="btn-back" onclick="goBackToMenuFromDateInput()">Cancel / Go Back</button>
+        <button class="btn-continue" id="date-continue-button" onclick="processAttendanceDate()">Continue</button>
+        <button class="btn-back" id="date-back-button" onclick="goBackToMenuFromDateInput()">Cancel / Go Back</button>
     </div>
 
     <div id="input-section" class="hidden">
         <h2 id="current-category-title">Category</h2>
         <h3 id="column-header">Header: </h3>
-        
+
         <form id="item-form" onsubmit="addItem(event)">
             <input type="text" id="main-input" placeholder="Enter Members" autocomplete="off">
-            <button type="submit" class="btn-add">Add Item (+)</button>
+            <button type="submit" class="btn-add" id="add-item-button">Add Member (+)</button>
         </form>
 
         <h3>Current List (<span id="count">0</span>):</h3>
         <ul id="item-list"></ul>
 
-        <button class="btn-save" onclick="sendToGoogleSheets()">Save to Cloud Spreadsheet</button>
-        <button class="btn-back" onclick="goBackToMenu()">Cancel / Go Back</button>
+        <button class="btn-save" id="save-button" onclick="sendToGoogleSheets()">Save to Cloud Spreadsheet</button>
+        <button class="btn-back" id="back-button" onclick="goBackToMenu()">Cancel / Go Back</button>
         <div id="loading" class="hidden">Sending to cloud database...</div>
     </div>
 </div>
@@ -143,6 +162,23 @@
         }
     }
 
+    // Helper to toggle form interactivity (for loading state)
+    function toggleFormInteractions(enable) {
+        document.getElementById('main-input').disabled = !enable;
+        document.getElementById('add-item-button').disabled = !enable;
+        document.getElementById('save-button').disabled = !enable;
+        document.getElementById('back-button').disabled = !enable;
+        // Also disable date input page buttons if needed, though usually resetApp handles state
+        const dateInput = document.getElementById('attendance-date-input');
+        if (dateInput) dateInput.disabled = !enable;
+        const dateContinueBtn = document.getElementById('date-continue-button');
+        if (dateContinueBtn) dateContinueBtn.disabled = !enable;
+        const dateBackBtn = document.getElementById('date-back-button');
+        if (dateBackBtn) dateBackBtn.disabled = !enable;
+        const attendanceBtn = document.getElementById('attendance-button');
+        if (attendanceBtn) attendanceBtn.disabled = !enable;
+    }
+
     // Initial state: show only the menu
     document.addEventListener('DOMContentLoaded', () => {
         showSection('menu-section');
@@ -163,7 +199,7 @@
 
         if (dateValue !== "") {
             customHeader = dateValue; // Set the date as the custom header
-            
+
             // Prepare the main input section
             document.getElementById("current-category-title").innerText = currentTab;
             document.getElementById("column-header").innerText = "Date: " + customHeader;
@@ -180,14 +216,14 @@
         event.preventDefault();
         let mainInput = document.getElementById("main-input");
         let value = mainInput.value.trim();
-        
+
         if (value !== "") {
             itemsArray.push(value);
-            
+
             let li = document.createElement("li");
             li.textContent = value;
             document.getElementById("item-list").appendChild(li);
-            
+
             document.getElementById("count").innerText = itemsArray.length;
             mainInput.value = "";
             mainInput.focus();
@@ -201,11 +237,12 @@
         }
 
         if (GOOGLE_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") {
-            alert("Error: Update the GOOGLE_SCRIPT_URL variable on line 87!"); // Line number might change
+            alert("Error: Update the GOOGLE_SCRIPT_URL variable!");
             return;
         }
 
         document.getElementById("loading").classList.remove("hidden");
+        toggleFormInteractions(false); // Disable interaction
 
         let payload = {
             tabName: currentTab,
@@ -227,6 +264,7 @@
             console.error("Error:", error);
             alert("Failed to save data. Check internet connection.");
             document.getElementById("loading").classList.add("hidden");
+            toggleFormInteractions(true); // Re-enable on error
         });
     }
 
@@ -252,7 +290,7 @@
         document.getElementById("item-list").innerHTML = "";
         document.getElementById("count").innerText = "0";
         document.getElementById("loading").classList.add("hidden");
-        
+
         showSection('menu-section'); // Always go back to the menu
 
         // Reset any temporary variables
@@ -260,6 +298,8 @@
         customHeader = "";
         currentPlaceholderText = "";
         document.getElementById("attendance-date-input").value = ""; // Clear date input field
+
+        toggleFormInteractions(true); // Ensure all forms are enabled after reset
     }
 </script>
 
