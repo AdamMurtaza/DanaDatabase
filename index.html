@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Purpose Cloud Logger</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        h2, h3 { text-align: center; }
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-menu { background-color: #007aff; color: white; margin-bottom: 12px; }
+        .btn-add { background-color: #5856d6; color: white; }
+        .btn-save { background-color: #34c759; color: white; }
+        .btn-back { background-color: #8e8e93; color: white; }
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .hidden { display: none; }
+        ul { list-style-type: none; padding: 0; }
+        li {
+            padding: 12px;
+            background: #eee;
+            margin-top: 5px;
+            border-radius: 6px;
+        }
+        #loading {
+            text-align: center;
+            font-weight: bold;
+            color: #007aff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="menu-section">
+        <h2>Select Category</h2>
+        <button class="btn-menu" onclick="selectCategory('Attendance', 'Enter Date (e.g. 05-June-2026):', 'Enter Student/Staff Name...')">📅 Attendance</button>
+        <button class="btn-menu" onclick="selectCategory('Tasks', 'Enter Project/Task Title:', 'Enter Task Description...')">📝 Assign Tasks</button>
+        <button class="btn-menu" onclick="selectCategory('Item Count', 'Enter Batch/Inventory Date:', 'Enter Item Name & Qty...')">📦 Item Count</button>
+    </div>
+
+    <div id="input-section" class="hidden">
+        <h2 id="current-category-title">Category</h2>
+        <h3 id="column-header">Header: </h3>
+        
+        <form id="item-form" onsubmit="addItem(event)">
+            <input type="text" id="main-input" placeholder="Type here..." autocomplete="off">
+            <button type="submit" class="btn-add">Add Item (+)</button>
+        </form>
+
+        <h3>Current List (<span id="count">0</span>):</h3>
+        <ul id="item-list"></ul>
+
+        <button class="btn-save" onclick="sendToGoogleSheets()">Save to Cloud Spreadsheet</button>
+        <button class="btn-back" onclick="goBackToMenu()">Cancel / Go Back</button>
+        <div id="loading" class="hidden">Sending to cloud database...</div>
+    </div>
+</div>
+
+<script>
+    // 1. PASTE YOUR GOOGLE WEB APP URL HERE:
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjBfsEP9MuojvHWkw42t46MX13WjSSv0UDmwPH5hPlnE-YS1arxAvH1lvCfv6a4I2iKQ/exec";
+
+    let currentTab = ""; // Will hold "Attendance", "Tasks", or "Item Count"
+    let customHeader = "";
+    let itemsArray = [];
+
+    function selectCategory(tabName, promptText, placeholderText) {
+        let userInput = prompt(promptText);
+        if (userInput && userInput.trim() !== "") {
+            currentTab = tabName;
+            customHeader = userInput.trim();
+            
+            // Adjust UI Text based on selection
+            document.getElementById("current-category-title").innerText = currentTab;
+            document.getElementById("column-header").innerText = "Column Title: " + customHeader;
+            document.getElementById("main-input").placeholder = placeholderText;
+            
+            // Switch screens
+            document.getElementById("menu-section").classList.add("hidden");
+            document.getElementById("input-section").classList.remove("hidden");
+            document.getElementById("main-input").focus();
+        }
+    }
+
+    function addItem(event) {
+        event.preventDefault();
+        let mainInput = document.getElementById("main-input");
+        let value = mainInput.value.trim();
+        
+        if (value !== "") {
+            itemsArray.push(value);
+            
+            let li = document.createElement("li");
+            li.textContent = value;
+            document.getElementById("item-list").appendChild(li);
+            
+            document.getElementById("count").innerText = itemsArray.length;
+            mainInput.value = "";
+            mainInput.focus();
+        }
+    }
+
+    function sendToGoogleSheets() {
+        if (itemsArray.length === 0) {
+            alert("Please add at least one item first.");
+            return;
+        }
+
+        if (GOOGLE_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") {
+            alert("Error: Update the GOOGLE_SCRIPT_URL variable on line 87!");
+            return;
+        }
+
+        document.getElementById("loading").classList.remove("hidden");
+
+        // Bundle data tailored for the updated Google Apps Script
+        let payload = {
+            tabName: currentTab,
+            date: customHeader,
+            items: itemsArray
+        };
+
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors", 
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            alert(`Successfully saved to the "${currentTab}" tab!`);
+            resetApp();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to save data. Check internet connection.");
+            document.getElementById("loading").classList.add("hidden");
+        });
+    }
+
+    function goBackToMenu() {
+        if (itemsArray.length > 0 && !confirm("Discard current entries and go back?")) {
+            return;
+        }
+        resetApp();
+    }
+
+    function resetApp() {
+        itemsArray = [];
+        document.getElementById("item-list").innerHTML = "";
+        document.getElementById("count").innerText = "0";
+        document.getElementById("loading").classList.add("hidden");
+        document.getElementById("input-section").classList.add("hidden");
+        document.getElementById("menu-section").classList.remove("hidden");
+    }
+</script>
+
+</body>
+</html>
