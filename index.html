@@ -1,3 +1,6 @@
+from IPython.display import HTML
+
+html_content = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,18 +11,21 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             padding: 20px;
-            background-color: #f5f5f7;
-            color: #333;
+            background-color: #000000; /* Dark black background */
+            color: #e0e0e0; /* Light text for contrast */
         }
         .container {
             max-width: 500px;
             margin: 0 auto;
-            background: white;
+            background: #222222; /* Darker grey for container */
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); /* Stronger shadow for dark theme */
         }
-        h2, h3 { text-align: center; }
+        h2, h3 {
+            text-align: center;
+            color: #4CAF50; /* Green for headers */
+        }
         button {
             width: 100%;
             padding: 15px;
@@ -30,32 +36,39 @@
             cursor: pointer;
             font-weight: bold;
             transition: background 0.2s;
+            color: #ffffff; /* White text on buttons */
         }
-        .btn-menu { background-color: #007aff; color: white; margin-bottom: 12px; }
-        .btn-add { background-color: #5856d6; color: white; }
-        .btn-save { background-color: #34c759; color: white; }
-        .btn-back { background-color: #8e8e93; color: white; }
-        input[type="text"] {
+        .btn-menu { background-color: #4CAF50; /* Green */ margin-bottom: 12px; }
+        .btn-add { background-color: #4CAF50; /* Green */ }
+        .btn-save { background-color: #4CAF50; /* Green */ }
+        .btn-back { background-color: #616161; /* Dark grey for back button, fits theme */ }
+        .btn-continue { background-color: #4CAF50; /* Green for new continue button */ }
+        input[type="text"], input[type="date"] { /* Added input[type="date"] */
             width: 100%;
             padding: 15px;
             font-size: 16px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
+            border: 1px solid #4CAF50; /* Green border for inputs */
             border-radius: 8px;
             margin-top: 10px;
+            background-color: #333333; /* Dark background for inputs */
+            color: #e0e0e0; /* Light text color */
         }
-        .hidden { display: none; }
+        input[type="text"]::placeholder, input[type="date"]::placeholder {
+            color: #bbbbbb; /* Lighter placeholder text */
+        }
         ul { list-style-type: none; padding: 0; }
         li {
             padding: 12px;
-            background: #eee;
+            background: #3a3a3a; /* Darker background for list items */
             margin-top: 5px;
             border-radius: 6px;
+            color: #e0e0e0; /* Light text color for list items */
         }
         #loading {
             text-align: center;
             font-weight: bold;
-            color: #007aff;
+            color: #4CAF50; /* Green for loading text */
             margin-top: 10px;
         }
     </style>
@@ -65,9 +78,14 @@
 <div class="container">
     <div id="menu-section">
         <h2>Select Category</h2>
-        <button class="btn-menu" onclick="selectCategory('Attendance', 'Enter Date (e.g. 05-June-2026):', 'Enter Student/Staff Name...')">📅 Attendance</button>
-        <button class="btn-menu" onclick="selectCategory('Tasks', 'Enter Project/Task Title:', 'Enter Task Description...')">📝 Assign Tasks</button>
-        <button class="btn-menu" onclick="selectCategory('Item Count', 'Enter Batch/Inventory Date:', 'Enter Item Name & Qty...')">📦 Item Count</button>
+        <button class="btn-menu" onclick="showDateInput('Attendance', 'Enter Members')">📅 Attendance</button>
+    </div>
+
+    <div id="date-input-section" class="hidden">
+        <h2 id="date-category-title">Attendance Date</h2>
+        <input type="date" id="attendance-date-input" autocomplete="off">
+        <button class="btn-continue" onclick="processAttendanceDate()">Continue</button>
+        <button class="btn-back" onclick="goBackToMenuFromDateInput()">Cancel / Go Back</button>
     </div>
 
     <div id="input-section" class="hidden">
@@ -75,7 +93,7 @@
         <h3 id="column-header">Header: </h3>
         
         <form id="item-form" onsubmit="addItem(event)">
-            <input type="text" id="main-input" placeholder="Type here..." autocomplete="off">
+            <input type="text" id="main-input" placeholder="Enter Members" autocomplete="off">
             <button type="submit" class="btn-add">Add Item (+)</button>
         </form>
 
@@ -92,25 +110,38 @@
     // 1. PASTE YOUR GOOGLE WEB APP URL HERE:
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjBfsEP9MuojvHWkw42t46MX13WjSSv0UDmwPH5hPlnE-YS1arxAvH1lvCfv6a4I2iKQ/exec";
 
-    let currentTab = ""; // Will hold "Attendance", "Tasks", or "Item Count"
-    let customHeader = "";
+    let currentTab = "";
+    let customHeader = ""; // This will now hold the date
     let itemsArray = [];
+    let currentPlaceholderText = ""; // To store the placeholder for the main input section
 
-    function selectCategory(tabName, promptText, placeholderText) {
-        let userInput = prompt(promptText);
-        if (userInput && userInput.trim() !== "") {
-            currentTab = tabName;
-            customHeader = userInput.trim();
+    function showDateInput(tabName, placeholderText) {
+        currentTab = tabName;
+        currentPlaceholderText = placeholderText; // Store for later
+        document.getElementById("date-category-title").innerText = tabName + " Date";
+
+        document.getElementById("menu-section").classList.add("hidden");
+        document.getElementById("date-input-section").classList.remove("hidden");
+        document.getElementById("attendance-date-input").focus();
+    }
+
+    function processAttendanceDate() {
+        let dateInput = document.getElementById("attendance-date-input");
+        let dateValue = dateInput.value.trim();
+
+        if (dateValue !== "") {
+            customHeader = dateValue; // Set the date as the custom header
             
-            // Adjust UI Text based on selection
+            // Prepare the main input section
             document.getElementById("current-category-title").innerText = currentTab;
-            document.getElementById("column-header").innerText = "Column Title: " + customHeader;
-            document.getElementById("main-input").placeholder = placeholderText;
-            
-            // Switch screens
-            document.getElementById("menu-section").classList.add("hidden");
+            document.getElementById("column-header").innerText = "Date: " + customHeader;
+            document.getElementById("main-input").placeholder = currentPlaceholderText; // Use the stored placeholder
+
+            document.getElementById("date-input-section").classList.add("hidden");
             document.getElementById("input-section").classList.remove("hidden");
             document.getElementById("main-input").focus();
+        } else {
+            alert("Please enter a date.");
         }
     }
 
@@ -139,13 +170,12 @@
         }
 
         if (GOOGLE_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") {
-            alert("Error: Update the GOOGLE_SCRIPT_URL variable on line 87!");
+            alert("Error: Update the GOOGLE_SCRIPT_URL variable on line 87!"); // Line number might change
             return;
         }
 
         document.getElementById("loading").classList.remove("hidden");
 
-        // Bundle data tailored for the updated Google Apps Script
         let payload = {
             tabName: currentTab,
             date: customHeader,
@@ -154,7 +184,7 @@
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-            mode: "no-cors", 
+            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         })
@@ -170,10 +200,21 @@
     }
 
     function goBackToMenu() {
+        // This function handles going back from the main input section
         if (itemsArray.length > 0 && !confirm("Discard current entries and go back?")) {
             return;
         }
-        resetApp();
+        resetApp(); // Resets everything and goes back to the main menu
+    }
+
+    function goBackToMenuFromDateInput() {
+        // This function handles going back from the date input section to the main menu
+        document.getElementById("date-input-section").classList.add("hidden");
+        document.getElementById("menu-section").classList.remove("hidden");
+        // Clear any potentially half-filled data for safety
+        currentTab = "";
+        customHeader = "";
+        document.getElementById("attendance-date-input").value = "";
     }
 
     function resetApp() {
@@ -182,9 +223,18 @@
         document.getElementById("count").innerText = "0";
         document.getElementById("loading").classList.add("hidden");
         document.getElementById("input-section").classList.add("hidden");
+        document.getElementById("date-input-section").classList.add("hidden"); // Also hide date input section
         document.getElementById("menu-section").classList.remove("hidden");
+        
+        // Reset any temporary variables
+        currentTab = "";
+        customHeader = "";
+        currentPlaceholderText = "";
+        document.getElementById("attendance-date-input").value = ""; // Clear date input field
     }
 </script>
 
 </body>
 </html>
+"""
+display(HTML(html_content))
