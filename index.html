@@ -1,551 +1,1893 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dana Committe Taheri Mohallah</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dana Committee — Taheri Mohallah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            padding: 10px;
-            background-color: #000000;
-            color: #e0e0e0;
-            margin: 0;
-        }
+  <style>
+    /* ─────────────────────────────────────────────────
+       CSS VARIABLES  (identical to main app)
+    ───────────────────────────────────────────────── */
+    :root {
+      --bg:            #121212;
+      --bg-raised:     #181818;
+      --surface:       #1e1e1e;
+      --surface-hi:    #252525;
+      --surface-deep:  #161616;
 
-        .container {
-            max-width: 500px;
-            width: 95%;
-            margin: 0 auto;
-            background: #222222;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
+      --green:         #2d7a4f;
+      --green-hi:      #35915d;
+      --green-lo:      #1f5537;
+      --green-muted:   #1a3d2b;
+      --green-text:    #5bbf87;
+      --green-ghost:   rgba(45,122,79,0.15);
 
-        h2, h3 {
-            text-align: center;
-            color: #4CAF50;
-            word-wrap: break-word;
-        }
+      --text-primary:  #e8e8e8;
+      --text-secondary:#9a9a9a;
+      --text-muted:    #5a5a5a;
 
-        button {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            margin-top: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s, opacity 0.2s;
-            color: #ffffff;
-        }
+      --danger:        #c0392b;
+      --danger-muted:  rgba(192,57,43,0.15);
+      --danger-text:   #e07070;
 
-        .btn-menu     { background-color: #4CAF50; margin-bottom: 12px; }
-        .btn-add      { background-color: #4CAF50; }
-        .btn-save     { background-color: #4CAF50; }
-        .btn-back     { background-color: #616161; }
-        .btn-continue { background-color: #4CAF50; }
-        .btn-login    { background-color: #4CAF50; }
-        .btn-logout   { background-color: #616161; font-size: 13px; padding: 8px; margin-top: 0; }
+      --clay-raise:
+        6px 6px 14px rgba(0,0,0,0.55),
+        -3px -3px 8px rgba(255,255,255,0.04);
+      --clay-raise-sm:
+        4px 4px 10px rgba(0,0,0,0.5),
+        -2px -2px 6px rgba(255,255,255,0.035);
+      --clay-sink:
+        inset 4px 4px 10px rgba(0,0,0,0.6),
+        inset -2px -2px 6px rgba(255,255,255,0.03);
+      --clay-sink-deep:
+        inset 5px 5px 14px rgba(0,0,0,0.7),
+        inset -3px -3px 8px rgba(255,255,255,0.025);
+      --clay-green:
+        6px 6px 14px rgba(0,0,0,0.55),
+        -3px -3px 8px rgba(255,255,255,0.04),
+        0 0 0 1px rgba(45,122,79,0.25);
 
-        input[type="text"],
-        input[type="date"],
-        input[type="password"] {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            border: 1px solid #4CAF50;
-            border-radius: 8px;
-            margin-top: 10px;
-            background-color: #333333;
-            color: #e0e0e0;
-        }
+      --font:       'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-serif: 'DM Serif Display', Georgia, serif;
 
-        input::placeholder { color: #bbbbbb; }
+      --r-sm:  12px;
+      --r-md:  18px;
+      --r-lg:  22px;
+      --r-xl:  28px;
 
-        ul { list-style-type: none; padding: 0; }
-        li {
-            padding: 12px;
-            background: #3a3a3a;
-            margin-top: 5px;
-            border-radius: 6px;
-            color: #e0e0e0;
-            word-wrap: break-word;
-        }
+      --ease-clay: cubic-bezier(0.34, 1.40, 0.64, 1);
+      --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+      --t:         0.22s;
+    }
 
-        #loading {
-            text-align: center;
-            font-weight: bold;
-            color: #4CAF50;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #333333;
-            border-radius: 8px;
-        }
+    /* ─────────────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-tap-highlight-color: transparent; }
 
-        .banner {
-            background-color: #4CAF50;
-            color: #000000;
-            text-align: center;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            word-wrap: break-word;
-        }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100dvh;
+      overscroll-behavior: none;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        .hidden { display: none !important; }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
 
-        button:disabled, input:disabled {
-            background-color: #444;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--green-lo); border-radius: 2px; }
 
-        /* ── LOGIN-SPECIFIC STYLES ── */
-        #login-section {
-            animation: fadeIn 0.3s ease;
-        }
+    /* ─────────────────────────────────────────────────
+       HEADER / BANNER
+    ───────────────────────────────────────────────── */
+    .header {
+      background: var(--surface);
+      box-shadow: var(--clay-raise);
+      border-radius: 0 0 var(--r-xl) var(--r-xl);
+      padding: 22px 24px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-        .login-subtitle {
-            text-align: center;
-            color: #aaaaaa;
-            font-size: 14px;
-            margin-top: -8px;
-            margin-bottom: 6px;
-        }
+    .header-title {
+      font-family: var(--font-serif);
+      font-size: clamp(17px, 5vw, 21px);
+      font-weight: 400;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
 
-        .login-error {
-            background-color: #3a1a1a;
-            border: 1px solid #c0392b;
-            color: #e57373;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 14px;
-            text-align: center;
-            animation: shake 0.35s ease;
-        }
+    .header-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--green-text);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
 
-        .password-wrapper {
-            position: relative;
-            margin-top: 10px;
-        }
+    .header-pip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-ghost);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--green-text);
+      letter-spacing: 0.1em;
+      margin-top: 10px;
+    }
 
-        .password-wrapper input {
-            margin-top: 0;
-            padding-right: 50px;
-        }
+    .pip-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--green-text);
+      border-radius: 50%;
+      animation: breathe 2.2s ease-in-out infinite;
+    }
 
-        .toggle-pw {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #4CAF50;
-            font-size: 18px;
-            padding: 4px;
-            width: auto;
-            margin: 0;
-        }
+    @keyframes breathe {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.6); }
+    }
 
-        .toggle-pw:hover { opacity: 0.75; }
+    /* ─────────────────────────────────────────────────
+       APP SHELL
+    ───────────────────────────────────────────────── */
+    .app {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 28px 18px 56px;
+    }
 
-        .session-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #2e2e2e;
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 16px;
-        }
+    /* ─────────────────────────────────────────────────
+       SECTION LABEL
+    ───────────────────────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding-left: 4px;
+    }
 
-        .session-user {
-            font-size: 13px;
-            color: #9e9e9e;
-        }
+    /* ─────────────────────────────────────────────────
+       CLAY CARD
+    ───────────────────────────────────────────────── */
+    .clay-card {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow: var(--clay-raise);
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
 
-        .session-user span {
-            color: #4CAF50;
-            font-weight: bold;
-        }
+    /* ─────────────────────────────────────────────────
+       MENU BUTTONS
+    ───────────────────────────────────────────────── */
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 19px 20px;
+      background: var(--surface);
+      border: none;
+      border-radius: var(--r-xl);
+      box-shadow: var(--clay-raise);
+      cursor: pointer;
+      transition: box-shadow var(--t) var(--ease-clay), transform var(--t) var(--ease-clay);
+      margin-bottom: 14px;
+      text-align: left;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .menu-btn:active {
+      box-shadow: var(--clay-sink);
+      transform: scale(0.975);
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+    .menu-icon-wrap {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      border-radius: var(--r-md);
+      background: linear-gradient(145deg, var(--green-hi), var(--green-lo));
+      box-shadow:
+        3px 3px 8px rgba(0,0,0,0.45),
+        -1px -1px 4px rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
 
-        @keyframes shake {
-            0%,100% { transform: translateX(0); }
-            25%      { transform: translateX(-6px); }
-            75%      { transform: translateX(6px); }
-        }
-    </style>
+    .menu-text { flex: 1; min-width: 0; }
+    .menu-text-main {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .menu-text-sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+    .menu-chevron {
+      color: var(--text-muted);
+      font-size: 18px;
+      font-weight: 300;
+      flex-shrink: 0;
+      transition: transform var(--t) var(--ease-soft);
+    }
+    .menu-btn:active .menu-chevron { transform: translateX(4px); }
+
+    /* ─────────────────────────────────────────────────
+       INPUTS
+    ───────────────────────────────────────────────── */
+    .input-group { margin-bottom: 14px; }
+
+    .input-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding-left: 4px;
+    }
+
+    .clay-input {
+      width: 100%;
+      padding: 17px 18px;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-primary);
+      background: var(--surface-deep);
+      border: none;
+      border-radius: var(--r-lg);
+      box-shadow: var(--clay-sink);
+      outline: none;
+      transition: box-shadow var(--t) var(--ease-soft);
+      caret-color: var(--green-text);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .clay-input::placeholder { color: var(--text-muted); }
+    input[type="date"] { color-scheme: dark; }
+    .clay-input:focus {
+      box-shadow: var(--clay-sink-deep), 0 0 0 2px rgba(45,122,79,0.35);
+    }
+
+    /* Password field wrapper (for show/hide toggle) */
+    .pw-wrap {
+      position: relative;
+    }
+    .pw-wrap .clay-input {
+      padding-right: 54px;
+    }
+    .pw-toggle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 17px;
+      border-radius: 0 var(--r-lg) var(--r-lg) 0;
+      transition: color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pw-toggle:hover, .pw-toggle:focus { color: var(--green-text); outline: none; }
+
+    .char-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 5px;
+      padding-right: 4px;
+    }
+    .char-count {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .char-count.warn { color: var(--danger); }
+
+    /* ─────────────────────────────────────────────────
+       BUTTONS
+    ───────────────────────────────────────────────── */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      padding: 17px 20px;
+      border: none;
+      border-radius: var(--r-lg);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: box-shadow var(--t) var(--ease-clay), transform var(--t) var(--ease-clay), background var(--t);
+      -webkit-tap-highlight-color: transparent;
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+    .btn-primary {
+      background: linear-gradient(155deg, var(--green-hi) 0%, var(--green-lo) 100%);
+      color: #fff;
+      box-shadow: var(--clay-green);
+    }
+    .btn-primary:active {
+      box-shadow: var(--clay-sink);
+      transform: scale(0.972);
+      background: linear-gradient(155deg, var(--green-lo) 0%, var(--green-muted) 100%);
+    }
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .btn-add {
+      background: var(--surface-hi);
+      color: var(--green-text);
+      box-shadow: var(--clay-raise-sm);
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .btn-add:active { box-shadow: var(--clay-sink); transform: scale(0.975); }
+    .btn-add:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text-secondary);
+      box-shadow: var(--clay-raise-sm);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .btn-ghost:active { box-shadow: var(--clay-sink); transform: scale(0.975); }
+    .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-danger {
+      background: var(--surface);
+      color: var(--danger-text);
+      box-shadow: var(--clay-raise-sm);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .btn-danger:active { box-shadow: var(--clay-sink); transform: scale(0.975); }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .btn-row .btn { margin-bottom: 0; font-size: 13px; padding: 15px 10px; }
+
+    /* ─────────────────────────────────────────────────
+       DATE CHIP
+    ───────────────────────────────────────────────── */
+    .date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-ghost);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: 30px;
+      padding: 8px 15px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-text);
+      margin-bottom: 20px;
+    }
+
+    /* ─────────────────────────────────────────────────
+       ENTRY LIST
+    ───────────────────────────────────────────────── */
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 2px;
+    }
+    .list-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .list-badge {
+      background: var(--green-ghost);
+      border: 1px solid rgba(45,122,79,0.25);
+      border-radius: 20px;
+      padding: 3px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-text);
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .search-wrap .clay-input {
+      padding-left: 42px;
+      font-size: 14px;
+    }
+    .search-ico {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .item-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 296px;
+      overflow-y: auto;
+      padding-right: 2px;
+      margin-bottom: 18px;
+    }
+    .item-list:empty::after {
+      content: 'No entries yet — start typing above';
+      display: block;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 24px 0;
+      font-weight: 400;
+      font-style: italic;
+    }
+    .list-item {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border-radius: var(--r-md);
+      box-shadow: var(--clay-raise-sm);
+      padding: 13px 14px;
+      animation: item-pop 0.28s var(--ease-clay) both;
+    }
+    @keyframes item-pop {
+      from { opacity: 0; transform: scale(0.92) translateY(6px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .item-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 24px;
+      margin-right: 10px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .item-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .item-del-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 15px;
+      padding: 6px;
+      margin-left: 6px;
+      flex-shrink: 0;
+      transition: color 0.18s;
+      line-height: 1;
+      border-radius: 8px;
+    }
+    .item-del-btn:active {
+      color: var(--danger-text);
+      background: var(--danger-muted);
+    }
+
+    /* ─────────────────────────────────────────────────
+       UNDO SNACKBAR
+    ───────────────────────────────────────────────── */
+    .snack {
+      position: fixed;
+      bottom: -90px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface-hi);
+      border-radius: 40px;
+      box-shadow:
+        8px 8px 18px rgba(0,0,0,0.6),
+        -3px -3px 10px rgba(255,255,255,0.04);
+      padding: 13px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      z-index: 600;
+      transition: bottom 0.35s var(--ease-clay);
+      white-space: nowrap;
+      max-width: calc(100vw - 36px);
+    }
+    .snack.show { bottom: 28px; }
+    .snack-undo {
+      background: none;
+      border: none;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green-text);
+      cursor: pointer;
+      padding: 0;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─────────────────────────────────────────────────
+       LOADING OVERLAY
+    ───────────────────────────────────────────────── */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.88);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      z-index: 800;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease-soft);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .loading-overlay.show { opacity: 1; pointer-events: all; }
+
+    .clay-spinner {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--surface);
+      box-shadow:
+        6px 6px 16px rgba(0,0,0,0.6),
+        -3px -3px 10px rgba(255,255,255,0.04),
+        inset 3px 3px 8px rgba(0,0,0,0.5),
+        inset -2px -2px 6px rgba(255,255,255,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .clay-spinner::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: var(--green-text);
+      border-right-color: rgba(91,191,135,0.4);
+      animation: arc-spin 1s linear infinite;
+    }
+    @keyframes arc-spin { to { transform: rotate(360deg); } }
+
+    .loading-bar-track {
+      width: 160px;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 6px;
+      box-shadow: var(--clay-sink);
+      overflow: hidden;
+    }
+    .loading-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-lo), var(--green-text), var(--green-lo));
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: bar-shimmer 1.4s linear infinite;
+    }
+    @keyframes bar-shimmer {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    .loading-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ─────────────────────────────────────────────────
+       SUCCESS MODAL
+    ───────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s var(--ease-soft);
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .clay-modal {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow:
+        12px 12px 30px rgba(0,0,0,0.65),
+        -5px -5px 14px rgba(255,255,255,0.04);
+      padding: 36px 26px 28px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      transform: scale(0.88) translateY(24px);
+      transition: transform 0.38s var(--ease-clay);
+    }
+    .modal-overlay.show .clay-modal { transform: scale(1) translateY(0); }
+    .modal-icon-wrap {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(145deg, var(--green-hi), var(--green-lo));
+      border-radius: 22px;
+      box-shadow: var(--clay-raise);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+      animation: modal-icon-in 0.45s var(--ease-clay) 0.1s both;
+    }
+    @keyframes modal-icon-in {
+      from { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .modal-msg {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .modal-detail-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-ghost);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-text);
+      margin-bottom: 22px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+
+    /* ─────────────────────────────────────────────────
+       CONFIRM DIALOG
+    ───────────────────────────────────────────────── */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 950;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s var(--ease-soft);
+    }
+    .confirm-overlay.show { opacity: 1; pointer-events: all; }
+    .confirm-box {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow:
+        10px 10px 26px rgba(0,0,0,0.6),
+        -4px -4px 12px rgba(255,255,255,0.04);
+      padding: 28px 22px 22px;
+      max-width: 300px;
+      width: 100%;
+      transform: scale(0.92);
+      transition: transform 0.3s var(--ease-clay);
+      text-align: center;
+    }
+    .confirm-overlay.show .confirm-box { transform: scale(1); }
+    .confirm-msg {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .confirm-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .confirm-row .btn { margin-bottom: 0; }
+
+    /* ─────────────────────────────────────────────────
+       DIVIDER
+    ───────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin: 18px 0;
+    }
+
+    /* ─────────────────────────────────────────────────
+       SECTION TRANSITIONS
+    ───────────────────────────────────────────────── */
+    .section {
+      animation: section-rise 0.32s var(--ease-clay) both;
+    }
+    @keyframes section-rise {
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hidden { display: none !important; }
+
+    /* ─────────────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────────────── */
+    .app-footer {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 32px;
+      padding-bottom: 8px;
+    }
+
+    /* ─────────────────────────────────────────────────
+       SHAKE ANIMATION (validation)
+    ───────────────────────────────────────────────── */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-7px); }
+      40%     { transform: translateX(7px); }
+      60%     { transform: translateX(-5px); }
+      80%     { transform: translateX(5px); }
+    }
+    .shake { animation: shake 0.38s var(--ease-soft); }
+
+    /* ═════════════════════════════════════════════════
+       ██╗      ██████╗  ██████╗ ██╗███╗   ██╗
+       ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║
+       ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║
+       ██║     ██║   ██║██║   ██║██║██║╚██╗██║
+       ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║
+       ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝
+    ═════════════════════════════════════════════════ */
+
+    /* Full-screen login gate — sits above everything */
+    #login-gate {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 18px;
+      overflow-y: auto;
+      transition: opacity 0.45s var(--ease-soft), transform 0.45s var(--ease-clay);
+    }
+
+    /* Exit animation class */
+    #login-gate.gate-exit {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    /* Noise texture (same as body) */
+    #login-gate::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ── Login card ── */
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow:
+        12px 12px 30px rgba(0,0,0,0.65),
+        -5px -5px 14px rgba(255,255,255,0.04);
+      padding: 36px 28px 30px;
+      animation: section-rise 0.5s var(--ease-clay) 0.05s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Logotype above card ── */
+    .login-logotype {
+      text-align: center;
+      margin-bottom: 28px;
+      animation: section-rise 0.5s var(--ease-clay) both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-logo-seal {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(145deg, var(--green-hi), var(--green-lo));
+      border-radius: 20px;
+      box-shadow: var(--clay-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+
+    .login-logo-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .login-logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green-text);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-top: 5px;
+      opacity: 0.8;
+    }
+
+    /* ── Card heading ── */
+    .login-card-heading {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* ── Error banner ── */
+    .login-error-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--danger-muted);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-radius: var(--r-md);
+      padding: 13px 15px;
+      margin-bottom: 16px;
+      animation: section-rise 0.3s var(--ease-clay) both;
+    }
+
+    .login-error-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .login-error-msg {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--danger-text);
+      line-height: 1.4;
+    }
+
+    /* ── Lockout countdown pill ── */
+    .lockout-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--danger-muted);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-radius: 30px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--danger-text);
+      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Session bar (after login) ── */
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      box-shadow: var(--clay-raise-sm);
+      padding: 11px 16px;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+
+    .session-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .session-avatar {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--green-hi), var(--green-lo));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      box-shadow:
+        2px 2px 6px rgba(0,0,0,0.4),
+        -1px -1px 3px rgba(255,255,255,0.04);
+    }
+
+    .session-text { min-width: 0; }
+
+    .session-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .session-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-text);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-session-logout {
+      flex-shrink: 0;
+      background: var(--surface-hi);
+      color: var(--text-secondary);
+      border: none;
+      border-radius: var(--r-md);
+      box-shadow: var(--clay-raise-sm);
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 8px 13px;
+      cursor: pointer;
+      transition: box-shadow var(--t) var(--ease-clay), transform var(--t) var(--ease-clay);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-session-logout:active {
+      box-shadow: var(--clay-sink);
+      transform: scale(0.96);
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="banner">Dana Committe Taheri Mohallah</div>
+  <!-- ══════════════════════════════════════════════════════════
+       ██╗      ██████╗  ██████╗ ██╗███╗   ██╗     ██████╗  █████╗ ████████╗███████╗
+       ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║    ██╔════╝ ██╔══██╗╚══██╔══╝██╔════╝
+       ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║    ██║  ███╗███████║   ██║   █████╗
+       ██║     ██║   ██║██║   ██║██║██║╚██╗██║    ██║   ██║██╔══██║   ██║   ██╔══╝
+       ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║    ╚██████╔╝██║  ██║   ██║   ███████╗
+       ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝
+  ═══════════════════════════════════════════════════════════════════════════════════ -->
 
-<div class="container">
+  <div id="login-gate">
 
-    <!-- ══════════════ LOGIN SECTION ══════════════ -->
-    <div id="login-section">
-        <h2>🔐 Member Login</h2>
-        <p class="login-subtitle">Enter your credentials to continue</p>
-
-        <input type="text" id="login-username" placeholder="Username" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false">
-
-        <div class="password-wrapper">
-            <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
-            <button class="toggle-pw" id="toggle-pw-btn" type="button" title="Show / hide password" tabindex="-1">👁</button>
-        </div>
-
-        <button class="btn-login" id="login-button" onclick="attemptLogin()">Login</button>
-
-        <div id="login-error" class="login-error hidden">Invalid username or password.</div>
+    <!-- Logotype -->
+    <div class="login-logotype">
+      <div class="login-logo-seal">🕌</div>
+      <div class="login-logo-title">Dana Committee</div>
+      <div class="login-logo-sub">Taheri Mohallah</div>
     </div>
 
-    <!-- ══════════════ MAIN APP (hidden until login) ══════════════ -->
-    <div id="app-root" class="hidden">
+    <!-- Login card -->
+    <div class="login-card" id="login-card">
+      <div class="login-card-heading">Member Access</div>
 
-        <!-- Session bar -->
-        <div class="session-bar">
-            <div class="session-user">Logged in as <span id="session-username-display"></span></div>
-            <button class="btn-logout" onclick="logout()">Logout</button>
+      <!-- Error banner (hidden until needed) -->
+      <div class="login-error-banner hidden" id="login-error-banner" role="alert" aria-live="polite">
+        <span class="login-error-icon">⚠️</span>
+        <span class="login-error-msg" id="login-error-msg">Invalid username or password.</span>
+      </div>
+
+      <!-- Lockout countdown (hidden until lockout) -->
+      <div class="lockout-pill hidden" id="lockout-pill">
+        <span>🔒</span>
+        <span id="lockout-label">Too many attempts — wait 30s</span>
+      </div>
+
+      <!-- Username -->
+      <div class="input-group">
+        <label class="input-label" for="login-username">Username</label>
+        <input
+          type="text"
+          id="login-username"
+          class="clay-input"
+          placeholder="Enter username"
+          autocomplete="username"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <label class="input-label" for="login-password">Password</label>
+        <div class="pw-wrap">
+          <input
+            type="password"
+            id="login-password"
+            class="clay-input"
+            placeholder="Enter password"
+            autocomplete="current-password"
+          />
+          <button class="pw-toggle" id="pw-toggle-btn" type="button" tabindex="-1" aria-label="Show password">👁</button>
         </div>
+      </div>
 
-        <!-- ── Menu ── -->
-        <div id="menu-section">
-            <h2>Select Category</h2>
-            <button class="btn-menu" id="attendance-button" onclick="showDateInput('Attendance', 'Enter Members')">📅 Attendance</button>
+      <!-- Login CTA -->
+      <button class="btn btn-primary" id="login-btn" onclick="attemptLogin()" style="margin-top:6px;">
+        <span id="login-btn-label">Sign In</span>
+      </button>
+    </div>
+
+    <div class="app-footer" style="margin-top:20px;">Dana Committee · Taheri Mohallah · v2.0</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN APPLICATION  (hidden until authenticated)
+  ═══════════════════════════════════════════════════════════ -->
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-title">Dana Committee</div>
+    <div class="header-sub">Taheri Mohallah</div>
+    <div class="header-pip">
+      <span class="pip-dot"></span> Cloud Logger Active
+    </div>
+  </div>
+
+  <div class="app">
+
+    <!-- ── Session bar ── -->
+    <div class="session-bar" id="session-bar">
+      <div class="session-info">
+        <div class="session-avatar">👤</div>
+        <div class="session-text">
+          <div class="session-label">Logged in as</div>
+          <div class="session-name" id="session-name-display">—</div>
         </div>
+      </div>
+      <button class="btn-session-logout" onclick="logout()">Logout</button>
+    </div>
 
-        <!-- ── Date Input ── -->
-        <div id="date-input-section" class="hidden">
-            <h2 id="date-category-title">Attendance Date</h2>
-            <input type="date" id="attendance-date-input" autocomplete="off">
-            <button class="btn-continue" id="date-continue-button" onclick="processAttendanceDate()">Continue</button>
-            <button class="btn-back" id="date-back-button" onclick="goBackToMenuFromDateInput()">Cancel / Go Back</button>
+    <!-- ══ MENU ══════════════════════════════════════════════ -->
+    <div id="menu-section" class="section">
+      <div class="section-label">Select Module</div>
+
+      <button class="menu-btn" onclick="showDateInput('Attendance', 'Member name')">
+        <span class="menu-icon-wrap">📅</span>
+        <span class="menu-text">
+          <div class="menu-text-main">Attendance</div>
+          <div class="menu-text-sub">Record member presence by date</div>
+        </span>
+        <span class="menu-chevron">›</span>
+      </button>
+    </div>
+
+    <!-- ══ DATE PICKER ═══════════════════════════════════════ -->
+    <div id="date-section" class="section hidden">
+      <div class="section-label" id="date-label">Set Date</div>
+
+      <div class="clay-card">
+        <div class="input-group">
+          <label class="input-label" for="date-input">📅 Date</label>
+          <input type="date" id="date-input" class="clay-input" autocomplete="off" />
         </div>
+        <button class="btn btn-primary" onclick="processDate()">Continue &rarr;</button>
+        <button class="btn btn-ghost" onclick="navToMenu()">← Cancel</button>
+      </div>
+    </div>
 
-        <!-- ── Entry Input ── -->
-        <div id="input-section" class="hidden">
-            <h2 id="current-category-title">Category</h2>
-            <h3 id="column-header">Header: </h3>
+    <!-- ══ ENTRY LOGGER ══════════════════════════════════════ -->
+    <div id="input-section" class="section hidden">
+      <div class="section-label" id="input-section-label">Log Entries</div>
 
-            <form id="item-form" onsubmit="addItem(event)">
-                <input type="text" id="main-input" placeholder="Enter Members" autocomplete="off">
-                <button type="submit" class="btn-add" id="add-item-button">Add Member (+)</button>
-            </form>
+      <span class="date-chip" id="date-chip">📅 —</span>
 
-            <h3>Current List (<span id="count">0</span>):</h3>
-            <ul id="item-list"></ul>
-
-            <button class="btn-save" id="save-button" onclick="sendToGoogleSheets()">Save to Cloud Spreadsheet</button>
-            <button class="btn-back" id="back-button" onclick="goBackToMenu()">Cancel / Go Back</button>
-            <div id="loading" class="hidden">Sending to cloud database...</div>
+      <div class="clay-card">
+        <div class="input-group">
+          <label class="input-label" id="entry-label">Entry</label>
+          <input type="text" id="main-input" class="clay-input"
+                 placeholder="Type and tap Add…"
+                 autocomplete="off" maxlength="80" />
+          <div class="char-row">
+            <span class="char-count" id="char-count">0 / 80</span>
+          </div>
         </div>
+        <button class="btn btn-add" id="add-btn" onclick="addItem()">＋ Add Entry</button>
+      </div>
 
-    </div><!-- /#app-root -->
-</div><!-- /.container -->
+      <div class="list-header">
+        <span class="list-title">Entries</span>
+        <span class="list-badge" id="count">0</span>
+      </div>
 
-<script>
-// ─────────────────────────────────────────────────────────────
-//  CREDENTIAL CONFIGURATION
-//  ─────────────────────────────────────────────────────────────
-//
-//  Credentials are NOT stored in plain text here.
-//  Instead they are stored as SHA-256 hashes.
-//
-//  HOW TO SET UP YOUR CREDENTIALS
-//  ────────────────────────────────
-//  1. Decide your username and password.
-//  2. Open a terminal (or use https://emn178.github.io/online-tools/sha256.html)
-//     and run:
-//       echo -n "yourUsername" | sha256sum
-//       echo -n "yourPassword"  | sha256sum
-//  3. Copy the two hex strings produced and paste them below,
-//     replacing the placeholder values.
-//  4. Save the file.  The plain-text credentials never appear in
-//     the source code — only their one-way hashes do.
-//
-//  EXAMPLE (DO NOT USE THESE — they are just for illustration):
-//    Username "admin"   →  8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-//    Password "admin"   →  8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-//
-//  MULTIPLE USERS
-//  Replace the single object with an array if needed (see comment below).
-// ─────────────────────────────────────────────────────────────
+      <div class="search-wrap">
+        <span class="search-ico">🔍</span>
+        <input type="text" id="search-input" class="clay-input"
+               placeholder="Search entries…" autocomplete="off"
+               oninput="renderList()" />
+      </div>
 
-const CREDENTIALS = [
+      <ul class="item-list" id="item-list"></ul>
+
+      <hr class="divider" />
+
+      <div class="btn-row">
+        <button class="btn btn-ghost"   id="export-btn" onclick="exportCSV()">⬇ CSV Export</button>
+        <button class="btn btn-danger"  id="clear-btn"  onclick="confirmClearAll()">🗑 Clear All</button>
+      </div>
+
+      <button class="btn btn-primary" id="save-btn"  onclick="sendToCloud()">☁ Save to Cloud</button>
+      <button class="btn btn-ghost"   id="back-btn"  onclick="confirmBack()">← Back to Menu</button>
+    </div>
+
+  </div><!-- /.app -->
+
+  <div class="app-footer">Dana Committee · Taheri Mohallah · v2.0</div>
+
+  <!-- ══ UNDO SNACKBAR ═════════════════════════════════════════ -->
+  <div class="snack" id="snack">
+    <span id="snack-label">Removed entry</span>
+    <button class="snack-undo" onclick="undoDelete()">↩ Undo</button>
+  </div>
+
+  <!-- ══ LOADING OVERLAY ═══════════════════════════════════════ -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="clay-spinner"></div>
+    <div class="loading-bar-track"><div class="loading-bar-fill"></div></div>
+    <div class="loading-text">Saving to cloud…</div>
+  </div>
+
+  <!-- ══ SUCCESS MODAL ═════════════════════════════════════════ -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="clay-modal">
+      <div class="modal-icon-wrap">✅</div>
+      <div class="modal-title">Saved!</div>
+      <div class="modal-msg">Your data has been successfully transmitted to the cloud spreadsheet.</div>
+      <div class="modal-detail-pill" id="modal-detail">—</div>
+      <button class="btn btn-primary" onclick="closeSuccessModal()">Done</button>
+    </div>
+  </div>
+
+  <!-- ══ CONFIRM DIALOG ════════════════════════════════════════ -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+      <div class="confirm-msg" id="confirm-msg">Are you sure?</div>
+      <div class="confirm-row">
+        <button class="btn btn-ghost"   onclick="closeConfirm(false)">Cancel</button>
+        <button class="btn btn-danger"  onclick="closeConfirm(true)">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+  "use strict";
+  /* ══════════════════════════════════════════════════════════
+     ██████╗  ██████╗ ██████╗ ████████╗  (Authentication)
+  ═════════════════════════════════════════════════════════════
+
+     HOW CREDENTIALS WORK
+     ─────────────────────
+     Passwords are NEVER stored as plain text in this file.
+     Instead, each credential is stored as a SHA-256 hash —
+     a one-way mathematical fingerprint.
+
+     When you type your password, the browser hashes it on-
+     the-fly using the built-in Web Crypto API, then compares
+     the two hashes. Even if someone reads every line of this
+     source code, they only see hash strings — not the real
+     passwords.
+
+     ═══════════════════════════════════════════════════
+      HOW TO SET UP YOUR OWN CREDENTIALS
+     ═══════════════════════════════════════════════════
+
+     STEP 1 — Decide your username and password.
+
+     STEP 2 — Generate the SHA-256 hashes.
+       Option A (browser — no install needed):
+         Open any browser console (F12 → Console tab) and run:
+
+           async function h(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
+           h("YourChosenUsername").then(console.log)
+           h("YourChosenPassword").then(console.log)
+
+       Option B (terminal / command line):
+           echo -n "YourChosenUsername" | sha256sum
+           echo -n "YourChosenPassword"  | sha256sum
+         (macOS uses `shasum -a 256` instead of `sha256sum`)
+
+       Option C (online tool — trusted, offline computation):
+           https://emn178.github.io/online-tools/sha256.html
+
+     STEP 3 — Paste the two 64-character hex strings below,
+       replacing the placeholder values in the CREDENTIALS
+       array.  The displayName appears in the session bar.
+
+     STEP 4 — Save the file.  Done — no server, no .env file
+       needed for this offline HTML app.
+
+     MULTIPLE USERS
+       Duplicate the object block inside the array:
+         { usernameHash: "...", passwordHash: "...", displayName: "..." }
+
+     ═══════════════════════════════════════════════════
+      ⚠  IMPORTANT: change the defaults below!
+         The placeholders use hash("admin") for both fields.
+         Anyone who reads this comment knows the algorithm.
+         Replace them with YOUR unique hashes before deploying.
+     ═══════════════════════════════════════════════════
+  ══════════════════════════════════════════════════════════ */
+
+  const CREDENTIALS = [
     {
-        // Replace these with the SHA-256 hashes of YOUR chosen username & password.
-        usernameHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-        passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-        displayName:  "Admin"
+      // SHA-256 of "admin" — REPLACE with your own hashes!
+      usernameHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      displayName:  "Admin"
     }
-    // To add more users, copy the block above and append it with a comma:
+    // Add more users here:
     // ,{
-    //   usernameHash: "<hash of second username>",
-    //   passwordHash: "<hash of second password>",
-    //   displayName:  "User2"
+    //   usernameHash: "<64-char hex>",
+    //   passwordHash: "<64-char hex>",
+    //   displayName:  "Treasurer"
     // }
-];
+  ];
 
-// ─────────────────────────────────────────────────────────────
-//  GOOGLE SHEETS URL
-// ─────────────────────────────────────────────────────────────
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjBfsEP9MuojvHWkw42t46MX13WjSSv0UDmwPH5hPlnE-YS1arxAvH1lvCfv6a4I2iKQ/exec";
+  /* ── Brute-force protection ──────────────────────────────── */
+  const MAX_ATTEMPTS    = 7;
+  const LOCKOUT_MS      = 30_000; // 30 seconds
+  let   loginAttempts   = 0;
+  let   lockUntil       = 0;
+  let   lockoutInterval = null;
+  let   loggedInUser    = null;
 
-// ─────────────────────────────────────────────────────────────
-//  UTILITY: SHA-256 via Web Crypto API (built into every browser)
-// ─────────────────────────────────────────────────────────────
-async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-    const hashArray  = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-}
+  /* ── SHA-256 via built-in Web Crypto (no library needed) ─── */
+  async function sha256(message) {
+    const buffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(message)
+    );
+    return Array.from(new Uint8Array(buffer))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
 
-// ─────────────────────────────────────────────────────────────
-//  LOGIN STATE
-// ─────────────────────────────────────────────────────────────
-let loggedInUser = null;
-let loginAttempts = 0;
-const MAX_ATTEMPTS = 10;        // Simple brute-force soft-lock
-let lockUntil = 0;
-
-// ─────────────────────────────────────────────────────────────
-//  AUTHENTICATION
-// ─────────────────────────────────────────────────────────────
-async function attemptLogin() {
+  /* ── Login flow ──────────────────────────────────────────── */
+  async function attemptLogin() {
+    // Check lockout
     const now = Date.now();
     if (now < lockUntil) {
-        const secsLeft = Math.ceil((lockUntil - now) / 1000);
-        showLoginError(`Too many attempts. Please wait ${secsLeft} second${secsLeft !== 1 ? "s" : ""}.`);
-        return;
+      pulseCard();
+      return;
     }
 
     const usernameRaw = document.getElementById("login-username").value;
     const passwordRaw = document.getElementById("login-password").value;
 
     if (!usernameRaw || !passwordRaw) {
-        showLoginError("Please enter both username and password.");
-        return;
+      showLoginError("Please enter both username and password.");
+      return;
     }
 
+    // Show busy state
     setLoginBusy(true);
 
-    const [uHash, pHash] = await Promise.all([sha256(usernameRaw), sha256(passwordRaw)]);
+    // Hash both inputs concurrently
+    const [uHash, pHash] = await Promise.all([
+      sha256(usernameRaw),
+      sha256(passwordRaw)
+    ]);
 
-    const match = CREDENTIALS.find(
-        c => c.usernameHash === uHash && c.passwordHash === pHash
-    );
+    // Constant-time-ish comparison: check every credential
+    // (prevents timing side-channels on short-circuit)
+    let matchedUser = null;
+    for (const cred of CREDENTIALS) {
+      if (cred.usernameHash === uHash && cred.passwordHash === pHash) {
+        matchedUser = cred;
+      }
+    }
 
     setLoginBusy(false);
 
-    if (match) {
+    if (matchedUser) {
+      // ✅ SUCCESS
+      loginAttempts = 0;
+      loggedInUser  = matchedUser.displayName;
+      hideLoginError();
+      transitionToApp();
+    } else {
+      // ❌ FAILURE
+      loginAttempts++;
+      // Clear password field — requirement #4
+      document.getElementById("login-password").value = "";
+      document.getElementById("login-username").focus();
+      pulseCard();
+
+      if (loginAttempts >= MAX_ATTEMPTS) {
+        lockUntil     = Date.now() + LOCKOUT_MS;
         loginAttempts = 0;
-        loggedInUser  = match.displayName;
-        document.getElementById("login-password").value = "";
-        document.getElementById("login-error").classList.add("hidden");
-        transitionToApp();
-    } else {
-        loginAttempts++;
-        document.getElementById("login-password").value = "";
+        startLockoutCountdown();
+      } else {
+        showLoginError("Invalid username or password.");
+      }
+    }
+  }
+
+  function setLoginBusy(busy) {
+    const btn   = document.getElementById("login-btn");
+    const label = document.getElementById("login-btn-label");
+    const uInp  = document.getElementById("login-username");
+    const pInp  = document.getElementById("login-password");
+
+    btn.disabled  = busy;
+    uInp.disabled = busy;
+    pInp.disabled = busy;
+    label.textContent = busy ? "Verifying…" : "Sign In";
+  }
+
+  function showLoginError(msg) {
+    const banner = document.getElementById("login-error-banner");
+    document.getElementById("login-error-msg").textContent = msg;
+    banner.classList.remove("hidden");
+    // Re-trigger animation
+    banner.style.animation = "none";
+    void banner.offsetWidth;
+    banner.style.animation = "";
+  }
+
+  function hideLoginError() {
+    document.getElementById("login-error-banner").classList.add("hidden");
+  }
+
+  function startLockoutCountdown() {
+    hideLoginError();
+    const pill  = document.getElementById("lockout-pill");
+    const label = document.getElementById("lockout-label");
+    const btn   = document.getElementById("login-btn");
+    const btnLbl= document.getElementById("login-btn-label");
+
+    pill.classList.remove("hidden");
+    btn.disabled = true;
+    document.getElementById("login-username").disabled = true;
+    document.getElementById("login-password").disabled = true;
+
+    clearInterval(lockoutInterval);
+    lockoutInterval = setInterval(() => {
+      const remaining = Math.ceil((lockUntil - Date.now()) / 1000);
+      if (remaining <= 0) {
+        clearInterval(lockoutInterval);
+        pill.classList.add("hidden");
+        btn.disabled = false;
+        btnLbl.textContent = "Sign In";
+        document.getElementById("login-username").disabled = false;
+        document.getElementById("login-password").disabled = false;
         document.getElementById("login-username").focus();
+      } else {
+        label.textContent = "Too many attempts — wait " + remaining + "s";
+        btnLbl.textContent = "Locked (" + remaining + "s)";
+      }
+    }, 250);
+  }
 
-        if (loginAttempts >= MAX_ATTEMPTS) {
-            lockUntil = Date.now() + 30_000; // 30-second lock
-            loginAttempts = 0;
-            showLoginError("Too many failed attempts. Locked for 30 seconds.");
-        } else {
-            showLoginError("Invalid username or password.");
-        }
+  function pulseCard() {
+    const card = document.getElementById("login-card");
+    card.classList.remove("shake");
+    void card.offsetWidth;
+    card.classList.add("shake");
+    card.addEventListener("animationend", () => card.classList.remove("shake"), { once: true });
+  }
+
+  /* ── Show/hide password toggle ───────────────────────────── */
+  document.getElementById("pw-toggle-btn").addEventListener("click", function () {
+    const pw = document.getElementById("login-password");
+    const isHidden = pw.type === "password";
+    pw.type        = isHidden ? "text" : "password";
+    this.textContent  = isHidden ? "🙈" : "👁";
+    this.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+  });
+
+  /* ── Enter key on both login fields ─────────────────────── */
+  ["login-username", "login-password"].forEach(id => {
+    document.getElementById(id).addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); attemptLogin(); }
+    });
+  });
+
+  /* ── Transition: login → app ──────────────────────────────  */
+  function transitionToApp() {
+    const gate = document.getElementById("login-gate");
+    gate.classList.add("gate-exit");
+
+    // Update session bar
+    document.getElementById("session-name-display").textContent = loggedInUser;
+
+    // Remove gate from DOM after animation completes
+    gate.addEventListener("transitionend", () => {
+      gate.remove();
+    }, { once: true });
+
+    // Safety: fallback removal if transitionend doesn't fire
+    setTimeout(() => { if (gate.parentNode) gate.remove(); }, 600);
+  }
+
+  /* ── Logout ───────────────────────────────────────────────── */
+  async function logout() {
+    let proceed = true;
+    if (itemsArray.length > 0) {
+      proceed = await showConfirm("You have unsaved entries. Log out anyway?");
     }
-}
+    if (!proceed) return;
 
-function showLoginError(msg) {
-    const el = document.getElementById("login-error");
-    el.textContent = msg;
-    el.classList.remove("hidden");
-    // Re-trigger animation on repeated failures
-    el.style.animation = "none";
-    el.offsetHeight; // reflow
-    el.style.animation = "";
-}
-
-function setLoginBusy(busy) {
-    document.getElementById("login-button").disabled   = busy;
-    document.getElementById("login-username").disabled = busy;
-    document.getElementById("login-password").disabled = busy;
-    document.getElementById("login-button").textContent = busy ? "Checking…" : "Login";
-}
-
-function transitionToApp() {
-    document.getElementById("login-section").classList.add("hidden");
-    document.getElementById("session-username-display").textContent = loggedInUser;
-    document.getElementById("app-root").classList.remove("hidden");
-    showAppSection("menu-section");
-}
-
-function logout() {
-    if (itemsArray.length > 0 && !confirm("You have unsaved entries. Logout anyway?")) return;
     loggedInUser = null;
+
+    // Rebuild login gate in DOM
+    const gate = buildLoginGate();
+    document.body.prepend(gate);
+
+    // Reset app state
     resetApp();
-    document.getElementById("app-root").classList.add("hidden");
-    document.getElementById("login-section").classList.remove("hidden");
-    document.getElementById("login-username").value = "";
-    document.getElementById("login-password").value = "";
-    document.getElementById("login-error").classList.add("hidden");
-    document.getElementById("login-username").focus();
-}
 
-// Show/hide password toggle
-document.getElementById("toggle-pw-btn").addEventListener("click", function() {
-    const pwField = document.getElementById("login-password");
-    if (pwField.type === "password") {
-        pwField.type = "text";
-        this.textContent = "🙈";
-        this.title = "Hide password";
-    } else {
-        pwField.type = "password";
-        this.textContent = "👁";
-        this.title = "Show password";
-    }
-});
+    // Focus username field
+    setTimeout(() => {
+      const uInp = document.getElementById("login-username");
+      if (uInp) uInp.focus();
+    }, 80);
+  }
 
-// Enter key triggers login
-document.getElementById("login-username").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
-document.getElementById("login-password").addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
+  /* Re-create the login gate element after logout */
+  function buildLoginGate() {
+    const existing = document.getElementById("login-gate");
+    if (existing) return existing;
 
-// ─────────────────────────────────────────────────────────────
-//  MAIN APPLICATION LOGIC (unchanged from original)
-// ─────────────────────────────────────────────────────────────
-let currentTab = "";
-let customHeader = "";
-let itemsArray = [];
-let currentPlaceholderText = "";
+    const gate = document.createElement("div");
+    gate.id = "login-gate";
+    gate.innerHTML = `
+      <div class="login-logotype">
+        <div class="login-logo-seal">🕌</div>
+        <div class="login-logo-title">Dana Committee</div>
+        <div class="login-logo-sub">Taheri Mohallah</div>
+      </div>
+      <div class="login-card" id="login-card">
+        <div class="login-card-heading">Member Access</div>
+        <div class="login-error-banner hidden" id="login-error-banner" role="alert" aria-live="polite">
+          <span class="login-error-icon">⚠️</span>
+          <span class="login-error-msg" id="login-error-msg">Invalid username or password.</span>
+        </div>
+        <div class="lockout-pill hidden" id="lockout-pill">
+          <span>🔒</span>
+          <span id="lockout-label">Too many attempts — wait 30s</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="login-username">Username</label>
+          <input type="text" id="login-username" class="clay-input" placeholder="Enter username"
+                 autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="login-password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" class="clay-input" placeholder="Enter password"
+                   autocomplete="current-password" />
+            <button class="pw-toggle" id="pw-toggle-btn" type="button" tabindex="-1" aria-label="Show password">👁</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="login-btn" onclick="attemptLogin()" style="margin-top:6px;">
+          <span id="login-btn-label">Sign In</span>
+        </button>
+      </div>
+      <div class="app-footer" style="margin-top:20px;">Dana Committee · Taheri Mohallah · v2.0</div>
+    `;
 
-function showAppSection(sectionId) {
-    ["menu-section", "date-input-section", "input-section"].forEach(id => {
-        document.getElementById(id)?.classList.add("hidden");
-    });
-    document.getElementById(sectionId)?.classList.remove("hidden");
-}
-
-function toggleFormInteractions(enable) {
-    ["main-input", "add-item-button", "save-button", "back-button",
-     "attendance-date-input", "date-continue-button", "date-back-button",
-     "attendance-button"].forEach(id => {
+    // Re-wire events on the rebuilt gate
+    setTimeout(() => {
+      const pwBtn = document.getElementById("pw-toggle-btn");
+      if (pwBtn) {
+        pwBtn.addEventListener("click", function () {
+          const pw = document.getElementById("login-password");
+          const isHidden = pw.type === "password";
+          pw.type = isHidden ? "text" : "password";
+          this.textContent = isHidden ? "🙈" : "👁";
+          this.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+        });
+      }
+      ["login-username", "login-password"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.disabled = !enable;
+        if (el) el.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); attemptLogin(); } });
+      });
+    }, 50);
+
+    return gate;
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     MAIN APPLICATION LOGIC  (unchanged from original v2)
+  ══════════════════════════════════════════════════════════ */
+
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjBfsEP9MuojvHWkw42t46MX13WjSSv0UDmwPH5hPlnE-YS1arxAvH1lvCfv6a4I2iKQ/exec";
+  const CHAR_LIMIT        = 80;
+
+  let currentTab     = "";
+  let currentDate    = "";
+  let currentPH      = "Enter name";
+  let itemsArray     = [];
+  let lastDeleted    = null;
+  let undoTimer      = null;
+  let confirmResolve = null;
+
+  const APP_SECTIONS = ["menu-section", "date-section", "input-section"];
+
+  function showSection(id) {
+    APP_SECTIONS.forEach(s => {
+      const el = document.getElementById(s);
+      el.classList.add("hidden");
     });
-}
+    const target = document.getElementById(id);
+    target.classList.remove("hidden");
+    target.classList.remove("section");
+    void target.offsetWidth;
+    target.classList.add("section");
+  }
 
-function showDateInput(tabName, placeholderText) {
-    currentTab = tabName;
-    currentPlaceholderText = placeholderText;
-    document.getElementById("date-category-title").innerText = tabName + " Date";
-    showAppSection("date-input-section");
-    document.getElementById("attendance-date-input").focus();
-}
+  function showDateInput(tab, ph) {
+    currentTab = tab;
+    currentPH  = ph;
+    document.getElementById("date-label").textContent = tab + " — Set Date";
+    document.getElementById("date-input").value = new Date().toISOString().slice(0, 10);
+    showSection("date-section");
+    setTimeout(() => document.getElementById("date-input").focus(), 120);
+  }
 
-function processAttendanceDate() {
-    const dateValue = document.getElementById("attendance-date-input").value.trim();
-    if (dateValue) {
-        customHeader = dateValue;
-        document.getElementById("current-category-title").innerText = currentTab;
-        document.getElementById("column-header").innerText = "Date: " + customHeader;
-        document.getElementById("main-input").placeholder = currentPlaceholderText;
-        showAppSection("input-section");
-        document.getElementById("main-input").focus();
-    } else {
-        alert("Please enter a date.");
+  function processDate() {
+    const val = document.getElementById("date-input").value.trim();
+    if (!val) { triggerShake("date-input"); return; }
+    currentDate = val;
+
+    document.getElementById("input-section-label").textContent = currentTab;
+    document.getElementById("entry-label").textContent = currentPH.charAt(0).toUpperCase() + currentPH.slice(1);
+    document.getElementById("main-input").placeholder   = "Type " + currentPH + "…";
+    document.getElementById("date-chip").textContent    = "📅 " + formatDate(currentDate);
+    document.getElementById("search-input").value       = "";
+
+    itemsArray = [];
+    renderList();
+    showSection("input-section");
+    setTimeout(() => document.getElementById("main-input").focus(), 180);
+  }
+
+  function navToMenu() {
+    currentTab = ""; currentDate = "";
+    document.getElementById("date-input").value = "";
+    showSection("menu-section");
+  }
+
+  async function confirmBack() {
+    if (itemsArray.length > 0) {
+      const ok = await showConfirm("Discard " + itemsArray.length + " unsaved entries and go back?");
+      if (!ok) return;
     }
-}
+    resetApp();
+  }
 
-function addItem(event) {
-    event.preventDefault();
-    const mainInput = document.getElementById("main-input");
-    const value = mainInput.value.trim();
-    if (value) {
-        itemsArray.push(value);
-        const li = document.createElement("li");
-        li.textContent = value;
-        document.getElementById("item-list").appendChild(li);
-        document.getElementById("count").innerText = itemsArray.length;
-        mainInput.value = "";
-        mainInput.focus();
+  function resetApp() {
+    itemsArray  = [];
+    lastDeleted = null;
+    const si = document.getElementById("search-input");
+    const mi = document.getElementById("main-input");
+    if (si) si.value = "";
+    if (mi) mi.value = "";
+    updateCharCount(0);
+    renderList();
+    navToMenu();
+  }
+
+  function addItem() {
+    const inp = document.getElementById("main-input");
+    const val = inp.value.trim();
+    if (!val) { triggerShake("main-input"); return; }
+
+    itemsArray.push(val);
+    inp.value = "";
+    updateCharCount(0);
+    inp.focus();
+
+    document.getElementById("search-input").value = "";
+    renderList();
+
+    const list = document.getElementById("item-list");
+    requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+  }
+
+  function renderList() {
+    const query = (document.getElementById("search-input")?.value || "").toLowerCase();
+    const list  = document.getElementById("item-list");
+    list.innerHTML = "";
+
+    itemsArray
+      .map((item, i) => ({ item, i }))
+      .filter(({ item }) => item.toLowerCase().includes(query))
+      .forEach(({ item, i }) => {
+        const li  = document.createElement("li");
+        li.className = "list-item";
+
+        const num = document.createElement("span");
+        num.className   = "item-num";
+        num.textContent = (i + 1) + ".";
+
+        const txt = document.createElement("span");
+        txt.className   = "item-text";
+        txt.textContent = item;
+
+        const del = document.createElement("button");
+        del.className = "item-del-btn";
+        del.innerHTML = "✕";
+        del.setAttribute("aria-label", "Remove " + item);
+        del.addEventListener("click", () => removeItem(i));
+
+        li.append(num, txt, del);
+        list.appendChild(li);
+      });
+
+    document.getElementById("count").textContent = itemsArray.length;
+  }
+
+  function removeItem(idx) {
+    lastDeleted = { item: itemsArray[idx], index: idx };
+    itemsArray.splice(idx, 1);
+    renderList();
+    showSnack("Removed: " + truncate(lastDeleted.item, 20));
+  }
+
+  function showSnack(msg) {
+    clearTimeout(undoTimer);
+    document.getElementById("snack-label").textContent = msg;
+    const snack = document.getElementById("snack");
+    snack.classList.add("show");
+    undoTimer = setTimeout(() => snack.classList.remove("show"), 4200);
+  }
+
+  function undoDelete() {
+    if (!lastDeleted) return;
+    itemsArray.splice(lastDeleted.index, 0, lastDeleted.item);
+    lastDeleted = null;
+    clearTimeout(undoTimer);
+    document.getElementById("snack").classList.remove("show");
+    renderList();
+    const list = document.getElementById("item-list");
+    requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+  }
+
+  async function confirmClearAll() {
+    if (!itemsArray.length) return;
+    const ok = await showConfirm("Clear all " + itemsArray.length + " entries? This cannot be undone.");
+    if (!ok) return;
+    itemsArray  = [];
+    lastDeleted = null;
+    document.getElementById("search-input").value = "";
+    renderList();
+  }
+
+  function exportCSV() {
+    if (!itemsArray.length) { showConfirm("Nothing to export yet."); return; }
+    const header = ["#", "Entry", "Category", "Date"].join(",");
+    const rows   = itemsArray.map((item, i) =>
+      [i + 1, '"' + item.replace(/"/g, '""') + '"', currentTab, currentDate].join(",")
+    );
+    const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = currentTab + "_" + currentDate + ".csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function sendToCloud() {
+    if (!itemsArray.length) {
+      showConfirm("Add at least one entry before saving.");
+      return;
     }
-}
 
-function sendToGoogleSheets() {
-    if (itemsArray.length === 0) { alert("Please add at least one item first."); return; }
-    if (GOOGLE_SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE") { alert("Error: Update the GOOGLE_SCRIPT_URL variable!"); return; }
-
-    document.getElementById("loading").classList.remove("hidden");
-    toggleFormInteractions(false);
+    setLoading(true);
 
     fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tabName: currentTab, date: customHeader, items: itemsArray })
+      method:  "POST",
+      mode:    "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ tabName: currentTab, date: currentDate, items: itemsArray })
     })
     .then(() => {
-        alert(`Successfully saved to the "${currentTab}" tab!`);
-        resetApp();
+      setLoading(false);
+      openSuccessModal(currentTab, currentDate, itemsArray.length);
     })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Failed to save data. Check internet connection.");
-        document.getElementById("loading").classList.add("hidden");
-        toggleFormInteractions(true);
+    .catch(err => {
+      console.error(err);
+      setLoading(false);
+      showConfirm("Network error. Please check your connection and try again.");
     });
-}
+  }
 
-function goBackToMenu() {
-    if (itemsArray.length > 0 && !confirm("Discard current entries and go back?")) return;
+  function setLoading(on) {
+    const ov = document.getElementById("loading-overlay");
+    on ? ov.classList.add("show") : ov.classList.remove("show");
+    ["add-btn","save-btn","back-btn","export-btn","clear-btn"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = on;
+    });
+  }
+
+  function openSuccessModal(tab, date, count) {
+    document.getElementById("modal-detail").textContent =
+      tab + "  ·  " + formatDate(date) + "  ·  " + count + " entries";
+    document.getElementById("success-modal").classList.add("show");
+  }
+
+  function closeSuccessModal() {
+    document.getElementById("success-modal").classList.remove("show");
     resetApp();
-}
+  }
 
-function goBackToMenuFromDateInput() {
-    showAppSection("menu-section");
-    currentTab = "";
-    customHeader = "";
-    document.getElementById("attendance-date-input").value = "";
-}
+  function showConfirm(msg) {
+    return new Promise(resolve => {
+      confirmResolve = resolve;
+      document.getElementById("confirm-msg").textContent = msg;
+      document.getElementById("confirm-overlay").classList.add("show");
+    });
+  }
 
-function resetApp() {
-    itemsArray = [];
-    document.getElementById("item-list").innerHTML = "";
-    document.getElementById("count").innerText = "0";
-    document.getElementById("loading").classList.add("hidden");
-    showAppSection("menu-section");
-    currentTab = "";
-    customHeader = "";
-    currentPlaceholderText = "";
-    document.getElementById("attendance-date-input").value = "";
-    toggleFormInteractions(true);
-}
+  function closeConfirm(result) {
+    document.getElementById("confirm-overlay").classList.remove("show");
+    if (confirmResolve) { confirmResolve(result); confirmResolve = null; }
+  }
 
-// ─────────────────────────────────────────────────────────────
-//  INIT — show login first
-// ─────────────────────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("login-username").focus();
-});
-</script>
+  function triggerShake(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove("shake");
+    void el.offsetWidth;
+    el.classList.add("shake");
+    el.addEventListener("animationend", () => el.classList.remove("shake"), { once: true });
+  }
+
+  function updateCharCount(len) {
+    const el = document.getElementById("char-count");
+    if (!el) return;
+    el.textContent = len + " / " + CHAR_LIMIT;
+    el.classList.toggle("warn", len >= CHAR_LIMIT - 10);
+  }
+
+  function formatDate(d) {
+    try {
+      const [y, m, day] = d.split("-");
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      return day + " " + months[+m - 1] + " " + y;
+    } catch { return d; }
+  }
+
+  function truncate(s, n) { return s.length > n ? s.slice(0, n) + "…" : s; }
+
+  /* ── Init ─────────────────────────────────────────────────── */
+  document.addEventListener("DOMContentLoaded", () => {
+    showSection("menu-section");
+
+    document.getElementById("main-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); addItem(); }
+    });
+
+    document.getElementById("main-input").addEventListener("input", e => {
+      updateCharCount(e.target.value.length);
+    });
+
+    // Focus login username on load
+    const uInp = document.getElementById("login-username");
+    if (uInp) uInp.focus();
+  });
+  </script>
+
 </body>
 </html>
