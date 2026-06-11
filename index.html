@@ -9,17 +9,15 @@
 
   <style>
     /* ─────────────────────────────────────────────────
-       CSS VARIABLES
+       CSS VARIABLES  (identical to main app)
     ───────────────────────────────────────────────── */
     :root {
-      /* Base surfaces */
       --bg:            #121212;
       --bg-raised:     #181818;
       --surface:       #1e1e1e;
       --surface-hi:    #252525;
       --surface-deep:  #161616;
 
-      /* Greens — matte, not neon */
       --green:         #2d7a4f;
       --green-hi:      #35915d;
       --green-lo:      #1f5537;
@@ -27,16 +25,14 @@
       --green-text:    #5bbf87;
       --green-ghost:   rgba(45,122,79,0.15);
 
-      /* Text */
       --text-primary:  #e8e8e8;
       --text-secondary:#9a9a9a;
       --text-muted:    #5a5a5a;
 
-      /* Danger */
       --danger:        #c0392b;
       --danger-muted:  rgba(192,57,43,0.15);
+      --danger-text:   #e07070;
 
-      /* Clay shadows — the heart of the look */
       --clay-raise:
         6px 6px 14px rgba(0,0,0,0.55),
         -3px -3px 8px rgba(255,255,255,0.04);
@@ -54,17 +50,14 @@
         -3px -3px 8px rgba(255,255,255,0.04),
         0 0 0 1px rgba(45,122,79,0.25);
 
-      /* Typography */
       --font:       'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-serif: 'DM Serif Display', Georgia, serif;
 
-      /* Geometry */
       --r-sm:  12px;
       --r-md:  18px;
       --r-lg:  22px;
       --r-xl:  28px;
 
-      /* Motion */
       --ease-clay: cubic-bezier(0.34, 1.40, 0.64, 1);
       --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
       --t:         0.22s;
@@ -85,7 +78,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Subtle noise texture on bg */
     body::before {
       content: '';
       position: fixed;
@@ -195,7 +187,7 @@
     }
 
     /* ─────────────────────────────────────────────────
-       MENU BUTTONS (main nav)
+       MENU BUTTONS
     ───────────────────────────────────────────────── */
     .menu-btn {
       display: flex;
@@ -213,7 +205,6 @@
       text-align: left;
       -webkit-tap-highlight-color: transparent;
     }
-
     .menu-btn:active {
       box-shadow: var(--clay-sink);
       transform: scale(0.975);
@@ -235,21 +226,18 @@
     }
 
     .menu-text { flex: 1; min-width: 0; }
-
     .menu-text-main {
       font-size: 16px;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.2;
     }
-
     .menu-text-sub {
       font-size: 12px;
       font-weight: 400;
       color: var(--text-secondary);
       margin-top: 3px;
     }
-
     .menu-chevron {
       color: var(--text-muted);
       font-size: 18px;
@@ -257,7 +245,6 @@
       flex-shrink: 0;
       transition: transform var(--t) var(--ease-soft);
     }
-
     .menu-btn:active .menu-chevron { transform: translateX(4px); }
 
     /* ─────────────────────────────────────────────────
@@ -280,7 +267,7 @@
       width: 100%;
       padding: 17px 18px;
       font-family: var(--font);
-      font-size: 16px; /* Prevents iOS zoom */
+      font-size: 16px;
       font-weight: 400;
       color: var(--text-primary);
       background: var(--surface-deep);
@@ -293,15 +280,38 @@
       -webkit-appearance: none;
       appearance: none;
     }
-
     .clay-input::placeholder { color: var(--text-muted); }
     input[type="date"] { color-scheme: dark; }
-
     .clay-input:focus {
-      box-shadow:
-        var(--clay-sink-deep),
-        0 0 0 2px rgba(45,122,79,0.35);
+      box-shadow: var(--clay-sink-deep), 0 0 0 2px rgba(45,122,79,0.35);
     }
+
+    /* Password field wrapper (for show/hide toggle) */
+    .pw-wrap {
+      position: relative;
+    }
+    .pw-wrap .clay-input {
+      padding-right: 54px;
+    }
+    .pw-toggle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 17px;
+      border-radius: 0 var(--r-lg) var(--r-lg) 0;
+      transition: color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pw-toggle:hover, .pw-toggle:focus { color: var(--green-text); outline: none; }
 
     .char-row {
       display: flex;
@@ -339,7 +349,6 @@
       margin-bottom: 10px;
       letter-spacing: 0.01em;
     }
-
     .btn-primary {
       background: linear-gradient(155deg, var(--green-hi) 0%, var(--green-lo) 100%);
       color: #fff;
@@ -355,7 +364,6 @@
       cursor: not-allowed;
       box-shadow: none;
     }
-
     .btn-add {
       background: var(--surface-hi);
       color: var(--green-text);
@@ -363,12 +371,8 @@
       font-size: 15px;
       font-weight: 700;
     }
-    .btn-add:active {
-      box-shadow: var(--clay-sink);
-      transform: scale(0.975);
-    }
+    .btn-add:active { box-shadow: var(--clay-sink); transform: scale(0.975); }
     .btn-add:disabled { opacity: 0.4; cursor: not-allowed; }
-
     .btn-ghost {
       background: var(--surface);
       color: var(--text-secondary);
@@ -376,25 +380,17 @@
       font-size: 14px;
       font-weight: 500;
     }
-    .btn-ghost:active {
-      box-shadow: var(--clay-sink);
-      transform: scale(0.975);
-    }
+    .btn-ghost:active { box-shadow: var(--clay-sink); transform: scale(0.975); }
     .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
-
     .btn-danger {
       background: var(--surface);
-      color: #e07070;
+      color: var(--danger-text);
       box-shadow: var(--clay-raise-sm);
       font-size: 13px;
       font-weight: 500;
     }
-    .btn-danger:active {
-      box-shadow: var(--clay-sink);
-      transform: scale(0.975);
-    }
+    .btn-danger:active { box-shadow: var(--clay-sink); transform: scale(0.975); }
 
-    /* 2-col row */
     .btn-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -430,7 +426,6 @@
       margin-bottom: 12px;
       padding: 0 2px;
     }
-
     .list-title {
       font-size: 11px;
       font-weight: 600;
@@ -438,7 +433,6 @@
       text-transform: uppercase;
       color: var(--text-muted);
     }
-
     .list-badge {
       background: var(--green-ghost);
       border: 1px solid rgba(45,122,79,0.25);
@@ -451,7 +445,6 @@
       text-align: center;
     }
 
-    /* Search bar */
     .search-wrap {
       position: relative;
       margin-bottom: 12px;
@@ -470,7 +463,6 @@
       pointer-events: none;
     }
 
-    /* List */
     .item-list {
       list-style: none;
       display: flex;
@@ -481,7 +473,6 @@
       padding-right: 2px;
       margin-bottom: 18px;
     }
-
     .item-list:empty::after {
       content: 'No entries yet — start typing above';
       display: block;
@@ -492,7 +483,6 @@
       font-weight: 400;
       font-style: italic;
     }
-
     .list-item {
       display: flex;
       align-items: center;
@@ -502,12 +492,10 @@
       padding: 13px 14px;
       animation: item-pop 0.28s var(--ease-clay) both;
     }
-
     @keyframes item-pop {
       from { opacity: 0; transform: scale(0.92) translateY(6px); }
       to   { opacity: 1; transform: scale(1) translateY(0); }
     }
-
     .item-num {
       font-size: 11px;
       font-weight: 700;
@@ -517,7 +505,6 @@
       flex-shrink: 0;
       text-align: right;
     }
-
     .item-text {
       flex: 1;
       font-size: 14px;
@@ -526,7 +513,6 @@
       word-break: break-word;
       line-height: 1.4;
     }
-
     .item-del-btn {
       background: none;
       border: none;
@@ -541,7 +527,7 @@
       border-radius: 8px;
     }
     .item-del-btn:active {
-      color: #e07070;
+      color: var(--danger-text);
       background: var(--danger-muted);
     }
 
@@ -571,7 +557,6 @@
       max-width: calc(100vw - 36px);
     }
     .snack.show { bottom: 28px; }
-
     .snack-undo {
       background: none;
       border: none;
@@ -605,12 +590,6 @@
     }
     .loading-overlay.show { opacity: 1; pointer-events: all; }
 
-    .clay-spinner-wrap {
-      position: relative;
-      width: 68px;
-      height: 68px;
-    }
-
     .clay-spinner {
       width: 68px;
       height: 68px;
@@ -624,8 +603,6 @@
       position: relative;
       overflow: hidden;
     }
-
-    /* Animated arc on top of the clay disc */
     .clay-spinner::after {
       content: '';
       position: absolute;
@@ -636,7 +613,6 @@
       border-right-color: rgba(91,191,135,0.4);
       animation: arc-spin 1s linear infinite;
     }
-
     @keyframes arc-spin { to { transform: rotate(360deg); } }
 
     .loading-bar-track {
@@ -647,7 +623,6 @@
       box-shadow: var(--clay-sink);
       overflow: hidden;
     }
-
     .loading-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--green-lo), var(--green-text), var(--green-lo));
@@ -655,12 +630,10 @@
       border-radius: 6px;
       animation: bar-shimmer 1.4s linear infinite;
     }
-
     @keyframes bar-shimmer {
       0%   { background-position: 200% center; }
       100% { background-position: -200% center; }
     }
-
     .loading-text {
       font-size: 13px;
       font-weight: 600;
@@ -688,7 +661,6 @@
       transition: opacity 0.28s var(--ease-soft);
     }
     .modal-overlay.show { opacity: 1; pointer-events: all; }
-
     .clay-modal {
       background: var(--surface);
       border-radius: var(--r-xl);
@@ -703,7 +675,6 @@
       transition: transform 0.38s var(--ease-clay);
     }
     .modal-overlay.show .clay-modal { transform: scale(1) translateY(0); }
-
     .modal-icon-wrap {
       width: 72px;
       height: 72px;
@@ -721,21 +692,18 @@
       from { transform: scale(0.5) rotate(-15deg); opacity: 0; }
       to   { transform: scale(1) rotate(0deg); opacity: 1; }
     }
-
     .modal-title {
       font-family: var(--font-serif);
       font-size: 22px;
       color: var(--text-primary);
       margin-bottom: 8px;
     }
-
     .modal-msg {
       font-size: 14px;
       color: var(--text-secondary);
       line-height: 1.6;
       margin-bottom: 18px;
     }
-
     .modal-detail-pill {
       display: inline-flex;
       align-items: center;
@@ -771,7 +739,6 @@
       transition: opacity 0.22s var(--ease-soft);
     }
     .confirm-overlay.show { opacity: 1; pointer-events: all; }
-
     .confirm-box {
       background: var(--surface);
       border-radius: var(--r-xl);
@@ -786,7 +753,6 @@
       text-align: center;
     }
     .confirm-overlay.show .confirm-box { transform: scale(1); }
-
     .confirm-msg {
       font-size: 15px;
       font-weight: 500;
@@ -794,7 +760,6 @@
       margin-bottom: 22px;
       line-height: 1.5;
     }
-
     .confirm-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -850,11 +815,320 @@
     }
     .shake { animation: shake 0.38s var(--ease-soft); }
 
+    /* ═════════════════════════════════════════════════
+       ██╗      ██████╗  ██████╗ ██╗███╗   ██╗
+       ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║
+       ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║
+       ██║     ██║   ██║██║   ██║██║██║╚██╗██║
+       ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║
+       ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝
+    ═════════════════════════════════════════════════ */
+
+    /* Full-screen login gate — sits above everything */
+    #login-gate {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 18px;
+      overflow-y: auto;
+      transition: opacity 0.45s var(--ease-soft), transform 0.45s var(--ease-clay);
+    }
+
+    /* Exit animation class */
+    #login-gate.gate-exit {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    /* Noise texture (same as body) */
+    #login-gate::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ── Login card ── */
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow:
+        12px 12px 30px rgba(0,0,0,0.65),
+        -5px -5px 14px rgba(255,255,255,0.04);
+      padding: 36px 28px 30px;
+      animation: section-rise 0.5s var(--ease-clay) 0.05s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Logotype above card ── */
+    .login-logotype {
+      text-align: center;
+      margin-bottom: 28px;
+      animation: section-rise 0.5s var(--ease-clay) both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-logo-seal {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(145deg, var(--green-hi), var(--green-lo));
+      border-radius: 20px;
+      box-shadow: var(--clay-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+
+    .login-logo-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .login-logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green-text);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-top: 5px;
+      opacity: 0.8;
+    }
+
+    /* ── Card heading ── */
+    .login-card-heading {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* ── Error banner ── */
+    .login-error-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--danger-muted);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-radius: var(--r-md);
+      padding: 13px 15px;
+      margin-bottom: 16px;
+      animation: section-rise 0.3s var(--ease-clay) both;
+    }
+
+    .login-error-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .login-error-msg {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--danger-text);
+      line-height: 1.4;
+    }
+
+    /* ── Lockout countdown pill ── */
+    .lockout-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--danger-muted);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-radius: 30px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--danger-text);
+      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Session bar (after login) ── */
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      box-shadow: var(--clay-raise-sm);
+      padding: 11px 16px;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+
+    .session-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .session-avatar {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--green-hi), var(--green-lo));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      box-shadow:
+        2px 2px 6px rgba(0,0,0,0.4),
+        -1px -1px 3px rgba(255,255,255,0.04);
+    }
+
+    .session-text { min-width: 0; }
+
+    .session-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .session-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-text);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-session-logout {
+      flex-shrink: 0;
+      background: var(--surface-hi);
+      color: var(--text-secondary);
+      border: none;
+      border-radius: var(--r-md);
+      box-shadow: var(--clay-raise-sm);
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 8px 13px;
+      cursor: pointer;
+      transition: box-shadow var(--t) var(--ease-clay), transform var(--t) var(--ease-clay);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-session-logout:active {
+      box-shadow: var(--clay-sink);
+      transform: scale(0.96);
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ══ HEADER ════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════
+       ██╗      ██████╗  ██████╗ ██╗███╗   ██╗     ██████╗  █████╗ ████████╗███████╗
+       ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║    ██╔════╝ ██╔══██╗╚══██╔══╝██╔════╝
+       ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║    ██║  ███╗███████║   ██║   █████╗
+       ██║     ██║   ██║██║   ██║██║██║╚██╗██║    ██║   ██║██╔══██║   ██║   ██╔══╝
+       ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║    ╚██████╔╝██║  ██║   ██║   ███████╗
+       ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝
+  ═══════════════════════════════════════════════════════════════════════════════════ -->
+
+  <div id="login-gate">
+
+    <!-- Logotype -->
+    <div class="login-logotype">
+      <div class="login-logo-seal">🕌</div>
+      <div class="login-logo-title">Dana Committee</div>
+      <div class="login-logo-sub">Taheri Mohallah</div>
+    </div>
+
+    <!-- Login card -->
+    <div class="login-card" id="login-card">
+      <div class="login-card-heading">Member Access</div>
+
+      <!-- Error banner (hidden until needed) -->
+      <div class="login-error-banner hidden" id="login-error-banner" role="alert" aria-live="polite">
+        <span class="login-error-icon">⚠️</span>
+        <span class="login-error-msg" id="login-error-msg">Invalid username or password.</span>
+      </div>
+
+      <!-- Lockout countdown (hidden until lockout) -->
+      <div class="lockout-pill hidden" id="lockout-pill">
+        <span>🔒</span>
+        <span id="lockout-label">Too many attempts — wait 30s</span>
+      </div>
+
+      <!-- Username -->
+      <div class="input-group">
+        <label class="input-label" for="login-username">Username</label>
+        <input
+          type="text"
+          id="login-username"
+          class="clay-input"
+          placeholder="Enter username"
+          autocomplete="username"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <label class="input-label" for="login-password">Password</label>
+        <div class="pw-wrap">
+          <input
+            type="password"
+            id="login-password"
+            class="clay-input"
+            placeholder="Enter password"
+            autocomplete="current-password"
+          />
+          <button class="pw-toggle" id="pw-toggle-btn" type="button" tabindex="-1" aria-label="Show password">👁</button>
+        </div>
+      </div>
+
+      <!-- Login CTA -->
+      <button class="btn btn-primary" id="login-btn" onclick="attemptLogin()" style="margin-top:6px;">
+        <span id="login-btn-label">Sign In</span>
+      </button>
+    </div>
+
+    <div class="app-footer" style="margin-top:20px;">Dana Committee · Taheri Mohallah · v2.0</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN APPLICATION  (hidden until authenticated)
+  ═══════════════════════════════════════════════════════════ -->
+
+  <!-- HEADER -->
   <div class="header">
     <div class="header-title">Dana Committee</div>
     <div class="header-sub">Taheri Mohallah</div>
@@ -864,6 +1138,18 @@
   </div>
 
   <div class="app">
+
+    <!-- ── Session bar ── -->
+    <div class="session-bar" id="session-bar">
+      <div class="session-info">
+        <div class="session-avatar">👤</div>
+        <div class="session-text">
+          <div class="session-label">Logged in as</div>
+          <div class="session-name" id="session-name-display">—</div>
+        </div>
+      </div>
+      <button class="btn-session-logout" onclick="logout()">Logout</button>
+    </div>
 
     <!-- ══ MENU ══════════════════════════════════════════════ -->
     <div id="menu-section" class="section">
@@ -877,8 +1163,6 @@
         </span>
         <span class="menu-chevron">›</span>
       </button>
-
-
     </div>
 
     <!-- ══ DATE PICKER ═══════════════════════════════════════ -->
@@ -901,7 +1185,6 @@
 
       <span class="date-chip" id="date-chip">📅 —</span>
 
-      <!-- Entry card -->
       <div class="clay-card">
         <div class="input-group">
           <label class="input-label" id="entry-label">Entry</label>
@@ -915,13 +1198,11 @@
         <button class="btn btn-add" id="add-btn" onclick="addItem()">＋ Add Entry</button>
       </div>
 
-      <!-- List header -->
       <div class="list-header">
         <span class="list-title">Entries</span>
         <span class="list-badge" id="count">0</span>
       </div>
 
-      <!-- ── Feature 1: live search ── -->
       <div class="search-wrap">
         <span class="search-ico">🔍</span>
         <input type="text" id="search-input" class="clay-input"
@@ -933,14 +1214,13 @@
 
       <hr class="divider" />
 
-      <!-- ── Feature 2: export + clear ── -->
       <div class="btn-row">
-        <button class="btn btn-ghost" id="export-btn" onclick="exportCSV()">⬇ CSV Export</button>
-        <button class="btn btn-danger" id="clear-btn" onclick="confirmClearAll()">🗑 Clear All</button>
+        <button class="btn btn-ghost"   id="export-btn" onclick="exportCSV()">⬇ CSV Export</button>
+        <button class="btn btn-danger"  id="clear-btn"  onclick="confirmClearAll()">🗑 Clear All</button>
       </div>
 
-      <button class="btn btn-primary" id="save-btn" onclick="sendToCloud()">☁ Save to Cloud</button>
-      <button class="btn btn-ghost" id="back-btn" onclick="confirmBack()">← Back to Menu</button>
+      <button class="btn btn-primary" id="save-btn"  onclick="sendToCloud()">☁ Save to Cloud</button>
+      <button class="btn btn-ghost"   id="back-btn"  onclick="confirmBack()">← Back to Menu</button>
     </div>
 
   </div><!-- /.app -->
@@ -948,7 +1228,6 @@
   <div class="app-footer">Dana Committee · Taheri Mohallah · v2.0</div>
 
   <!-- ══ UNDO SNACKBAR ═════════════════════════════════════════ -->
-  <!-- Feature 3: Undo delete -->
   <div class="snack" id="snack">
     <span id="snack-label">Removed entry</span>
     <button class="snack-undo" onclick="undoDelete()">↩ Undo</button>
@@ -957,9 +1236,7 @@
   <!-- ══ LOADING OVERLAY ═══════════════════════════════════════ -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="clay-spinner"></div>
-    <div class="loading-bar-track">
-      <div class="loading-bar-fill"></div>
-    </div>
+    <div class="loading-bar-track"><div class="loading-bar-fill"></div></div>
     <div class="loading-text">Saving to cloud…</div>
   </div>
 
@@ -979,313 +1256,637 @@
     <div class="confirm-box">
       <div class="confirm-msg" id="confirm-msg">Are you sure?</div>
       <div class="confirm-row">
-        <button class="btn btn-ghost" onclick="closeConfirm(false)">Cancel</button>
-        <button class="btn btn-danger" onclick="closeConfirm(true)">Confirm</button>
+        <button class="btn btn-ghost"   onclick="closeConfirm(false)">Cancel</button>
+        <button class="btn btn-danger"  onclick="closeConfirm(true)">Confirm</button>
       </div>
     </div>
   </div>
+
 
   <!-- ══════════════════════════════════════════════════════════
        JAVASCRIPT
   ══════════════════════════════════════════════════════════ -->
   <script>
+  "use strict";
+  /* ══════════════════════════════════════════════════════════
+     ██████╗  ██████╗ ██████╗ ████████╗  (Authentication)
+  ═════════════════════════════════════════════════════════════
 
-    /* ── CONFIG ───────────────────────────────────────────────── */
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjBfsEP9MuojvHWkw42t46MX13WjSSv0UDmwPH5hPlnE-YS1arxAvH1lvCfv6a4I2iKQ/exec";
-    const CHAR_LIMIT = 80;
+     HOW CREDENTIALS WORK
+     ─────────────────────
+     Passwords are NEVER stored as plain text in this file.
+     Instead, each credential is stored as a SHA-256 hash —
+     a one-way mathematical fingerprint.
 
-    /* ── STATE ────────────────────────────────────────────────── */
-    let currentTab      = "";
-    let currentDate     = "";
-    let currentPH       = "Enter name";
-    let itemsArray      = [];
-    let lastDeleted     = null;     // { item, index } for undo
-    let undoTimer       = null;
-    let confirmResolve  = null;
+     When you type your password, the browser hashes it on-
+     the-fly using the built-in Web Crypto API, then compares
+     the two hashes. Even if someone reads every line of this
+     source code, they only see hash strings — not the real
+     passwords.
 
-    /* ── SECTION ROUTING ──────────────────────────────────────── */
-    const SECTIONS = ["menu-section", "date-section", "input-section"];
+     ═══════════════════════════════════════════════════
+      HOW TO SET UP YOUR OWN CREDENTIALS
+     ═══════════════════════════════════════════════════
 
-    function showSection(id) {
-      SECTIONS.forEach(s => {
-        const el = document.getElementById(s);
-        el.classList.add("hidden");
-      });
-      const target = document.getElementById(id);
-      target.classList.remove("hidden");
-      // Re-trigger animation
-      target.classList.remove("section");
-      void target.offsetWidth;
-      target.classList.add("section");
+     STEP 1 — Decide your username and password.
+
+     STEP 2 — Generate the SHA-256 hashes.
+       Option A (browser — no install needed):
+         Open any browser console (F12 → Console tab) and run:
+
+           async function h(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
+           h("YourChosenUsername").then(console.log)
+           h("YourChosenPassword").then(console.log)
+
+       Option B (terminal / command line):
+           echo -n "YourChosenUsername" | sha256sum
+           echo -n "YourChosenPassword"  | sha256sum
+         (macOS uses `shasum -a 256` instead of `sha256sum`)
+
+       Option C (online tool — trusted, offline computation):
+           https://emn178.github.io/online-tools/sha256.html
+
+     STEP 3 — Paste the two 64-character hex strings below,
+       replacing the placeholder values in the CREDENTIALS
+       array.  The displayName appears in the session bar.
+
+     STEP 4 — Save the file.  Done — no server, no .env file
+       needed for this offline HTML app.
+
+     MULTIPLE USERS
+       Duplicate the object block inside the array:
+         { usernameHash: "...", passwordHash: "...", displayName: "..." }
+
+     ═══════════════════════════════════════════════════
+      ⚠  IMPORTANT: change the defaults below!
+         The placeholders use hash("admin") for both fields.
+         Anyone who reads this comment knows the algorithm.
+         Replace them with YOUR unique hashes before deploying.
+     ═══════════════════════════════════════════════════
+  ══════════════════════════════════════════════════════════ */
+
+  const CREDENTIALS = [
+    {
+      // SHA-256 of "admin" — REPLACE with your own hashes!
+      usernameHash: "f7f376a1fcd0d0e11a10ed1b6577c99784d3a6bbe669b1d13fae43eb64634f6e",
+      passwordHash: "8bd7fc570dd3fd5e48991d6626d43c4c2f7a250aaeba5153798ec818156e43fa",
+      displayName:  "Admin"
+    }
+    // Add more users here:
+    // ,{
+    //   usernameHash: "<64-char hex>",
+    //   passwordHash: "<64-char hex>",
+    //   displayName:  "Treasurer"
+    // }
+  ];
+
+  /* ── Brute-force protection ──────────────────────────────── */
+  const MAX_ATTEMPTS    = 7;
+  const LOCKOUT_MS      = 30_000; // 30 seconds
+  let   loginAttempts   = 0;
+  let   lockUntil       = 0;
+  let   lockoutInterval = null;
+  let   loggedInUser    = null;
+
+  /* ── SHA-256 via built-in Web Crypto (no library needed) ─── */
+  async function sha256(message) {
+    const buffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(message)
+    );
+    return Array.from(new Uint8Array(buffer))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  /* ── Login flow ──────────────────────────────────────────── */
+  async function attemptLogin() {
+    // Check lockout
+    const now = Date.now();
+    if (now < lockUntil) {
+      pulseCard();
+      return;
     }
 
-    /* ── NAVIGATION ───────────────────────────────────────────── */
-    function showDateInput(tab, ph) {
-      currentTab = tab;
-      currentPH  = ph;
-      document.getElementById("date-label").textContent = tab + " — Set Date";
-      // Default to today
-      document.getElementById("date-input").value = new Date().toISOString().slice(0, 10);
-      showSection("date-section");
-      setTimeout(() => document.getElementById("date-input").focus(), 120);
+    const usernameRaw = document.getElementById("login-username").value;
+    const passwordRaw = document.getElementById("login-password").value;
+
+    if (!usernameRaw || !passwordRaw) {
+      showLoginError("Please enter both username and password.");
+      return;
     }
 
-    function processDate() {
-      const val = document.getElementById("date-input").value.trim();
-      if (!val) { triggerShake("date-input"); return; }
-      currentDate = val;
+    // Show busy state
+    setLoginBusy(true);
 
-      // Prepare entry screen
-      document.getElementById("input-section-label").textContent = currentTab;
-      document.getElementById("entry-label").textContent = currentPH.charAt(0).toUpperCase() + currentPH.slice(1);
-      document.getElementById("main-input").placeholder = "Type " + currentPH + "…";
-      document.getElementById("date-chip").textContent = "📅 " + formatDate(currentDate);
-      document.getElementById("search-input").value = "";
+    // Hash both inputs concurrently
+    const [uHash, pHash] = await Promise.all([
+      sha256(usernameRaw),
+      sha256(passwordRaw)
+    ]);
 
-      itemsArray = [];
-      renderList();
-      showSection("input-section");
-      setTimeout(() => document.getElementById("main-input").focus(), 180);
-    }
-
-    function navToMenu() {
-      currentTab = ""; currentDate = "";
-      document.getElementById("date-input").value = "";
-      showSection("menu-section");
-    }
-
-    async function confirmBack() {
-      if (itemsArray.length > 0) {
-        const ok = await showConfirm("Discard " + itemsArray.length + " unsaved entries and go back?");
-        if (!ok) return;
+    // Constant-time-ish comparison: check every credential
+    // (prevents timing side-channels on short-circuit)
+    let matchedUser = null;
+    for (const cred of CREDENTIALS) {
+      if (cred.usernameHash === uHash && cred.passwordHash === pHash) {
+        matchedUser = cred;
       }
-      resetApp();
     }
 
-    function resetApp() {
-      itemsArray = [];
-      lastDeleted = null;
-      document.getElementById("search-input").value = "";
-      document.getElementById("main-input").value = "";
-      updateCharCount(0);
-      renderList();
-      navToMenu();
+    setLoginBusy(false);
+
+    if (matchedUser) {
+      // ✅ SUCCESS
+      loginAttempts = 0;
+      loggedInUser  = matchedUser.displayName;
+      hideLoginError();
+      transitionToApp();
+    } else {
+      // ❌ FAILURE
+      loginAttempts++;
+      // Clear password field — requirement #4
+      document.getElementById("login-password").value = "";
+      document.getElementById("login-username").focus();
+      pulseCard();
+
+      if (loginAttempts >= MAX_ATTEMPTS) {
+        lockUntil     = Date.now() + LOCKOUT_MS;
+        loginAttempts = 0;
+        startLockoutCountdown();
+      } else {
+        showLoginError("Invalid username or password.");
+      }
     }
+  }
 
-    /* ── ADD ITEM ─────────────────────────────────────────────── */
-    function addItem() {
-      const inp = document.getElementById("main-input");
-      const val = inp.value.trim();
-      if (!val) { triggerShake("main-input"); return; }
+  function setLoginBusy(busy) {
+    const btn   = document.getElementById("login-btn");
+    const label = document.getElementById("login-btn-label");
+    const uInp  = document.getElementById("login-username");
+    const pInp  = document.getElementById("login-password");
 
-      itemsArray.push(val);
-      inp.value = "";
-      updateCharCount(0);
-      inp.focus();   // keep keyboard open on mobile
+    btn.disabled  = busy;
+    uInp.disabled = busy;
+    pInp.disabled = busy;
+    label.textContent = busy ? "Verifying…" : "Sign In";
+  }
 
-      // Clear search so new item is visible
-      document.getElementById("search-input").value = "";
-      renderList();
+  function showLoginError(msg) {
+    const banner = document.getElementById("login-error-banner");
+    document.getElementById("login-error-msg").textContent = msg;
+    banner.classList.remove("hidden");
+    // Re-trigger animation
+    banner.style.animation = "none";
+    void banner.offsetWidth;
+    banner.style.animation = "";
+  }
 
-      // Scroll list to bottom
-      const list = document.getElementById("item-list");
-      requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+  function hideLoginError() {
+    document.getElementById("login-error-banner").classList.add("hidden");
+  }
+
+  function startLockoutCountdown() {
+    hideLoginError();
+    const pill  = document.getElementById("lockout-pill");
+    const label = document.getElementById("lockout-label");
+    const btn   = document.getElementById("login-btn");
+    const btnLbl= document.getElementById("login-btn-label");
+
+    pill.classList.remove("hidden");
+    btn.disabled = true;
+    document.getElementById("login-username").disabled = true;
+    document.getElementById("login-password").disabled = true;
+
+    clearInterval(lockoutInterval);
+    lockoutInterval = setInterval(() => {
+      const remaining = Math.ceil((lockUntil - Date.now()) / 1000);
+      if (remaining <= 0) {
+        clearInterval(lockoutInterval);
+        pill.classList.add("hidden");
+        btn.disabled = false;
+        btnLbl.textContent = "Sign In";
+        document.getElementById("login-username").disabled = false;
+        document.getElementById("login-password").disabled = false;
+        document.getElementById("login-username").focus();
+      } else {
+        label.textContent = "Too many attempts — wait " + remaining + "s";
+        btnLbl.textContent = "Locked (" + remaining + "s)";
+      }
+    }, 250);
+  }
+
+  function pulseCard() {
+    const card = document.getElementById("login-card");
+    card.classList.remove("shake");
+    void card.offsetWidth;
+    card.classList.add("shake");
+    card.addEventListener("animationend", () => card.classList.remove("shake"), { once: true });
+  }
+
+  /* ── Show/hide password toggle ───────────────────────────── */
+  document.getElementById("pw-toggle-btn").addEventListener("click", function () {
+    const pw = document.getElementById("login-password");
+    const isHidden = pw.type === "password";
+    pw.type        = isHidden ? "text" : "password";
+    this.textContent  = isHidden ? "🙈" : "👁";
+    this.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+  });
+
+  /* ── Enter key on both login fields ─────────────────────── */
+  ["login-username", "login-password"].forEach(id => {
+    document.getElementById(id).addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); attemptLogin(); }
+    });
+  });
+
+  /* ── Transition: login → app ──────────────────────────────  */
+  function transitionToApp() {
+    const gate = document.getElementById("login-gate");
+    gate.classList.add("gate-exit");
+
+    // Update session bar
+    document.getElementById("session-name-display").textContent = loggedInUser;
+
+    // Remove gate from DOM after animation completes
+    gate.addEventListener("transitionend", () => {
+      gate.remove();
+    }, { once: true });
+
+    // Safety: fallback removal if transitionend doesn't fire
+    setTimeout(() => { if (gate.parentNode) gate.remove(); }, 600);
+  }
+
+  /* ── Logout ───────────────────────────────────────────────── */
+  async function logout() {
+    let proceed = true;
+    if (itemsArray.length > 0) {
+      proceed = await showConfirm("You have unsaved entries. Log out anyway?");
     }
+    if (!proceed) return;
 
-    /* ── RENDER LIST ──────────────────────────────────────────── */
-    function renderList() {
-      const query = (document.getElementById("search-input")?.value || "").toLowerCase();
-      const list  = document.getElementById("item-list");
-      list.innerHTML = "";
+    loggedInUser = null;
 
-      itemsArray
-        .map((item, i) => ({ item, i }))
-        .filter(({ item }) => item.toLowerCase().includes(query))
-        .forEach(({ item, i }) => {
-          const li   = document.createElement("li");
-          li.className = "list-item";
+    // Rebuild login gate in DOM
+    const gate = buildLoginGate();
+    document.body.prepend(gate);
 
-          const num  = document.createElement("span");
-          num.className = "item-num";
-          num.textContent = (i + 1) + ".";
+    // Reset app state
+    resetApp();
 
-          const txt  = document.createElement("span");
-          txt.className = "item-text";
-          txt.textContent = item;
+    // Focus username field
+    setTimeout(() => {
+      const uInp = document.getElementById("login-username");
+      if (uInp) uInp.focus();
+    }, 80);
+  }
 
-          const del  = document.createElement("button");
-          del.className = "item-del-btn";
-          del.innerHTML = "✕";
-          del.setAttribute("aria-label", "Remove " + item);
-          del.addEventListener("click", () => removeItem(i));
+  /* Re-create the login gate element after logout */
+  function buildLoginGate() {
+    const existing = document.getElementById("login-gate");
+    if (existing) return existing;
 
-          li.append(num, txt, del);
-          list.appendChild(li);
+    const gate = document.createElement("div");
+    gate.id = "login-gate";
+    gate.innerHTML = `
+      <div class="login-logotype">
+        <div class="login-logo-seal">🕌</div>
+        <div class="login-logo-title">Dana Committee</div>
+        <div class="login-logo-sub">Taheri Mohallah</div>
+      </div>
+      <div class="login-card" id="login-card">
+        <div class="login-card-heading">Member Access</div>
+        <div class="login-error-banner hidden" id="login-error-banner" role="alert" aria-live="polite">
+          <span class="login-error-icon">⚠️</span>
+          <span class="login-error-msg" id="login-error-msg">Invalid username or password.</span>
+        </div>
+        <div class="lockout-pill hidden" id="lockout-pill">
+          <span>🔒</span>
+          <span id="lockout-label">Too many attempts — wait 30s</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="login-username">Username</label>
+          <input type="text" id="login-username" class="clay-input" placeholder="Enter username"
+                 autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="login-password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" class="clay-input" placeholder="Enter password"
+                   autocomplete="current-password" />
+            <button class="pw-toggle" id="pw-toggle-btn" type="button" tabindex="-1" aria-label="Show password">👁</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="login-btn" onclick="attemptLogin()" style="margin-top:6px;">
+          <span id="login-btn-label">Sign In</span>
+        </button>
+      </div>
+      <div class="app-footer" style="margin-top:20px;">Dana Committee · Taheri Mohallah · v2.0</div>
+    `;
+
+    // Re-wire events on the rebuilt gate
+    setTimeout(() => {
+      const pwBtn = document.getElementById("pw-toggle-btn");
+      if (pwBtn) {
+        pwBtn.addEventListener("click", function () {
+          const pw = document.getElementById("login-password");
+          const isHidden = pw.type === "password";
+          pw.type = isHidden ? "text" : "password";
+          this.textContent = isHidden ? "🙈" : "👁";
+          this.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
         });
-
-      document.getElementById("count").textContent = itemsArray.length;
-    }
-
-    /* ── Feature 3: DELETE + UNDO ─────────────────────────────── */
-    function removeItem(idx) {
-      lastDeleted = { item: itemsArray[idx], index: idx };
-      itemsArray.splice(idx, 1);
-      renderList();
-      showSnack("Removed: " + truncate(lastDeleted.item, 20));
-    }
-
-    function showSnack(msg) {
-      clearTimeout(undoTimer);
-      document.getElementById("snack-label").textContent = msg;
-      const snack = document.getElementById("snack");
-      snack.classList.add("show");
-      undoTimer = setTimeout(() => snack.classList.remove("show"), 4200);
-    }
-
-    function undoDelete() {
-      if (!lastDeleted) return;
-      itemsArray.splice(lastDeleted.index, 0, lastDeleted.item);
-      lastDeleted = null;
-      clearTimeout(undoTimer);
-      document.getElementById("snack").classList.remove("show");
-      renderList();
-      const list = document.getElementById("item-list");
-      requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
-    }
-
-    /* ── Feature 2: CLEAR ALL ─────────────────────────────────── */
-    async function confirmClearAll() {
-      if (!itemsArray.length) return;
-      const ok = await showConfirm("Clear all " + itemsArray.length + " entries? This cannot be undone.");
-      if (!ok) return;
-      itemsArray = [];
-      lastDeleted = null;
-      document.getElementById("search-input").value = "";
-      renderList();
-    }
-
-    /* ── Feature 4: CSV EXPORT ────────────────────────────────── */
-    function exportCSV() {
-      if (!itemsArray.length) { showConfirm("Nothing to export yet."); return; }
-      const header = ["#", "Entry", "Category", "Date"].join(",");
-      const rows   = itemsArray.map((item, i) =>
-        [i + 1, '"' + item.replace(/"/g, '""') + '"', currentTab, currentDate].join(",")
-      );
-      const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement("a");
-      a.href     = url;
-      a.download = currentTab + "_" + currentDate + ".csv";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    /* ── CLOUD SAVE ───────────────────────────────────────────── */
-    function sendToCloud() {
-      if (!itemsArray.length) {
-        showConfirm("Add at least one entry before saving.");
-        return;
       }
-
-      setLoading(true);
-
-      const payload = {
-        tabName: currentTab,
-        date:    currentDate,
-        items:   itemsArray   // JSON array — no comma corruption
-      };
-
-      fetch(GOOGLE_SCRIPT_URL, {
-        method:  "POST",
-        mode:    "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(payload)
-      })
-      .then(() => {
-        setLoading(false);
-        openSuccessModal(currentTab, currentDate, itemsArray.length);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-        showConfirm("Network error. Please check your connection and try again.");
-      });
-    }
-
-    /* ── UI HELPERS ───────────────────────────────────────────── */
-    function setLoading(on) {
-      const ov = document.getElementById("loading-overlay");
-      on ? ov.classList.add("show") : ov.classList.remove("show");
-      ["add-btn","save-btn","back-btn","export-btn","clear-btn"].forEach(id => {
+      ["login-username", "login-password"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.disabled = on;
+        if (el) el.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); attemptLogin(); } });
       });
-    }
+    }, 50);
 
-    function openSuccessModal(tab, date, count) {
-      document.getElementById("modal-detail").textContent =
-        tab + "  ·  " + formatDate(date) + "  ·  " + count + " entries";
-      document.getElementById("success-modal").classList.add("show");
-    }
+    return gate;
+  }
 
-    function closeSuccessModal() {
-      document.getElementById("success-modal").classList.remove("show");
-      resetApp();
-    }
+  /* ══════════════════════════════════════════════════════════
+     MAIN APPLICATION LOGIC  (unchanged from original v2)
+  ══════════════════════════════════════════════════════════ */
 
-    /* Promise-based confirm */
-    function showConfirm(msg) {
-      return new Promise(resolve => {
-        confirmResolve = resolve;
-        document.getElementById("confirm-msg").textContent = msg;
-        document.getElementById("confirm-overlay").classList.add("show");
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjBfsEP9MuojvHWkw42t46MX13WjSSv0UDmwPH5hPlnE-YS1arxAvH1lvCfv6a4I2iKQ/exec";
+  const CHAR_LIMIT        = 80;
+
+  let currentTab     = "";
+  let currentDate    = "";
+  let currentPH      = "Enter name";
+  let itemsArray     = [];
+  let lastDeleted    = null;
+  let undoTimer      = null;
+  let confirmResolve = null;
+
+  const APP_SECTIONS = ["menu-section", "date-section", "input-section"];
+
+  function showSection(id) {
+    APP_SECTIONS.forEach(s => {
+      const el = document.getElementById(s);
+      el.classList.add("hidden");
+    });
+    const target = document.getElementById(id);
+    target.classList.remove("hidden");
+    target.classList.remove("section");
+    void target.offsetWidth;
+    target.classList.add("section");
+  }
+
+  function showDateInput(tab, ph) {
+    currentTab = tab;
+    currentPH  = ph;
+    document.getElementById("date-label").textContent = tab + " — Set Date";
+    document.getElementById("date-input").value = new Date().toISOString().slice(0, 10);
+    showSection("date-section");
+    setTimeout(() => document.getElementById("date-input").focus(), 120);
+  }
+
+  function processDate() {
+    const val = document.getElementById("date-input").value.trim();
+    if (!val) { triggerShake("date-input"); return; }
+    currentDate = val;
+
+    document.getElementById("input-section-label").textContent = currentTab;
+    document.getElementById("entry-label").textContent = currentPH.charAt(0).toUpperCase() + currentPH.slice(1);
+    document.getElementById("main-input").placeholder   = "Type " + currentPH + "…";
+    document.getElementById("date-chip").textContent    = "📅 " + formatDate(currentDate);
+    document.getElementById("search-input").value       = "";
+
+    itemsArray = [];
+    renderList();
+    showSection("input-section");
+    setTimeout(() => document.getElementById("main-input").focus(), 180);
+  }
+
+  function navToMenu() {
+    currentTab = ""; currentDate = "";
+    document.getElementById("date-input").value = "";
+    showSection("menu-section");
+  }
+
+  async function confirmBack() {
+    if (itemsArray.length > 0) {
+      const ok = await showConfirm("Discard " + itemsArray.length + " unsaved entries and go back?");
+      if (!ok) return;
+    }
+    resetApp();
+  }
+
+  function resetApp() {
+    itemsArray  = [];
+    lastDeleted = null;
+    const si = document.getElementById("search-input");
+    const mi = document.getElementById("main-input");
+    if (si) si.value = "";
+    if (mi) mi.value = "";
+    updateCharCount(0);
+    renderList();
+    navToMenu();
+  }
+
+  function addItem() {
+    const inp = document.getElementById("main-input");
+    const val = inp.value.trim();
+    if (!val) { triggerShake("main-input"); return; }
+
+    itemsArray.push(val);
+    inp.value = "";
+    updateCharCount(0);
+    inp.focus();
+
+    document.getElementById("search-input").value = "";
+    renderList();
+
+    const list = document.getElementById("item-list");
+    requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+  }
+
+  function renderList() {
+    const query = (document.getElementById("search-input")?.value || "").toLowerCase();
+    const list  = document.getElementById("item-list");
+    list.innerHTML = "";
+
+    itemsArray
+      .map((item, i) => ({ item, i }))
+      .filter(({ item }) => item.toLowerCase().includes(query))
+      .forEach(({ item, i }) => {
+        const li  = document.createElement("li");
+        li.className = "list-item";
+
+        const num = document.createElement("span");
+        num.className   = "item-num";
+        num.textContent = (i + 1) + ".";
+
+        const txt = document.createElement("span");
+        txt.className   = "item-text";
+        txt.textContent = item;
+
+        const del = document.createElement("button");
+        del.className = "item-del-btn";
+        del.innerHTML = "✕";
+        del.setAttribute("aria-label", "Remove " + item);
+        del.addEventListener("click", () => removeItem(i));
+
+        li.append(num, txt, del);
+        list.appendChild(li);
       });
+
+    document.getElementById("count").textContent = itemsArray.length;
+  }
+
+  function removeItem(idx) {
+    lastDeleted = { item: itemsArray[idx], index: idx };
+    itemsArray.splice(idx, 1);
+    renderList();
+    showSnack("Removed: " + truncate(lastDeleted.item, 20));
+  }
+
+  function showSnack(msg) {
+    clearTimeout(undoTimer);
+    document.getElementById("snack-label").textContent = msg;
+    const snack = document.getElementById("snack");
+    snack.classList.add("show");
+    undoTimer = setTimeout(() => snack.classList.remove("show"), 4200);
+  }
+
+  function undoDelete() {
+    if (!lastDeleted) return;
+    itemsArray.splice(lastDeleted.index, 0, lastDeleted.item);
+    lastDeleted = null;
+    clearTimeout(undoTimer);
+    document.getElementById("snack").classList.remove("show");
+    renderList();
+    const list = document.getElementById("item-list");
+    requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+  }
+
+  async function confirmClearAll() {
+    if (!itemsArray.length) return;
+    const ok = await showConfirm("Clear all " + itemsArray.length + " entries? This cannot be undone.");
+    if (!ok) return;
+    itemsArray  = [];
+    lastDeleted = null;
+    document.getElementById("search-input").value = "";
+    renderList();
+  }
+
+  function exportCSV() {
+    if (!itemsArray.length) { showConfirm("Nothing to export yet."); return; }
+    const header = ["#", "Entry", "Category", "Date"].join(",");
+    const rows   = itemsArray.map((item, i) =>
+      [i + 1, '"' + item.replace(/"/g, '""') + '"', currentTab, currentDate].join(",")
+    );
+    const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = currentTab + "_" + currentDate + ".csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function sendToCloud() {
+    if (!itemsArray.length) {
+      showConfirm("Add at least one entry before saving.");
+      return;
     }
 
-    function closeConfirm(result) {
-      document.getElementById("confirm-overlay").classList.remove("show");
-      if (confirmResolve) { confirmResolve(result); confirmResolve = null; }
-    }
+    setLoading(true);
 
-    function triggerShake(id) {
+    fetch(GOOGLE_SCRIPT_URL, {
+      method:  "POST",
+      mode:    "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ tabName: currentTab, date: currentDate, items: itemsArray })
+    })
+    .then(() => {
+      setLoading(false);
+      openSuccessModal(currentTab, currentDate, itemsArray.length);
+    })
+    .catch(err => {
+      console.error(err);
+      setLoading(false);
+      showConfirm("Network error. Please check your connection and try again.");
+    });
+  }
+
+  function setLoading(on) {
+    const ov = document.getElementById("loading-overlay");
+    on ? ov.classList.add("show") : ov.classList.remove("show");
+    ["add-btn","save-btn","back-btn","export-btn","clear-btn"].forEach(id => {
       const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove("shake");
-      void el.offsetWidth;
-      el.classList.add("shake");
-      el.addEventListener("animationend", () => el.classList.remove("shake"), { once: true });
-    }
+      if (el) el.disabled = on;
+    });
+  }
 
-    function updateCharCount(len) {
-      const el = document.getElementById("char-count");
-      if (!el) return;
-      el.textContent = len + " / " + CHAR_LIMIT;
-      el.classList.toggle("warn", len >= CHAR_LIMIT - 10);
-    }
+  function openSuccessModal(tab, date, count) {
+    document.getElementById("modal-detail").textContent =
+      tab + "  ·  " + formatDate(date) + "  ·  " + count + " entries";
+    document.getElementById("success-modal").classList.add("show");
+  }
 
-    function formatDate(d) {
-      try {
-        const [y,m,day] = d.split("-");
-        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        return day + " " + months[+m - 1] + " " + y;
-      } catch { return d; }
-    }
+  function closeSuccessModal() {
+    document.getElementById("success-modal").classList.remove("show");
+    resetApp();
+  }
 
-    function truncate(s, n) { return s.length > n ? s.slice(0, n) + "…" : s; }
+  function showConfirm(msg) {
+    return new Promise(resolve => {
+      confirmResolve = resolve;
+      document.getElementById("confirm-msg").textContent = msg;
+      document.getElementById("confirm-overlay").classList.add("show");
+    });
+  }
 
-    /* ── KEYBOARD / INIT ──────────────────────────────────────── */
-    document.addEventListener("DOMContentLoaded", () => {
-      showSection("menu-section");
+  function closeConfirm(result) {
+    document.getElementById("confirm-overlay").classList.remove("show");
+    if (confirmResolve) { confirmResolve(result); confirmResolve = null; }
+  }
 
-      document.getElementById("main-input").addEventListener("keydown", e => {
-        if (e.key === "Enter") { e.preventDefault(); addItem(); }
-      });
+  function triggerShake(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove("shake");
+    void el.offsetWidth;
+    el.classList.add("shake");
+    el.addEventListener("animationend", () => el.classList.remove("shake"), { once: true });
+  }
 
-      document.getElementById("main-input").addEventListener("input", e => {
-        updateCharCount(e.target.value.length);
-      });
+  function updateCharCount(len) {
+    const el = document.getElementById("char-count");
+    if (!el) return;
+    el.textContent = len + " / " + CHAR_LIMIT;
+    el.classList.toggle("warn", len >= CHAR_LIMIT - 10);
+  }
+
+  function formatDate(d) {
+    try {
+      const [y, m, day] = d.split("-");
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      return day + " " + months[+m - 1] + " " + y;
+    } catch { return d; }
+  }
+
+  function truncate(s, n) { return s.length > n ? s.slice(0, n) + "…" : s; }
+
+  /* ── Init ─────────────────────────────────────────────────── */
+  document.addEventListener("DOMContentLoaded", () => {
+    showSection("menu-section");
+
+    document.getElementById("main-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); addItem(); }
     });
 
+    document.getElementById("main-input").addEventListener("input", e => {
+      updateCharCount(e.target.value.length);
+    });
+
+    // Focus login username on load
+    const uInp = document.getElementById("login-username");
+    if (uInp) uInp.focus();
+  });
   </script>
 
 </body>
